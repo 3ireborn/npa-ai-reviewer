@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NPA AI Reviewer - Powered by NPA Smart System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-white min-h-screen p-6">
+
+  <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-6 border border-blue-100">
+    <h1 class="text-3xl font-bold text-center text-blue-700 mb-2">🤖 NPA AI Reviewer</h1>
+    <p class="text-center text-slate-600 mb-6">
+      Upload gambar produk, lalu biarkan AI bantu buat komentar & caption <strong>Meta-friendly</strong> ✨
+    </p>
+
+    <!-- Upload Section -->
+    <div class="border-2 border-dashed border-blue-300 rounded-xl p-6 text-center bg-blue-50">
+      <input id="imageInput" type="file" accept="image/*" class="hidden" onchange="previewImage(event)" />
+      <label for="imageInput" class="cursor-pointer text-blue-600 font-medium hover:underline">
+        Klik di sini untuk upload gambar
+      </label>
+      <div id="preview" class="mt-4 flex justify-center"></div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="mt-6 grid md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-slate-700">Nama Produk / Orang</label>
+        <input id="name" type="text" placeholder="Contoh: Kopi Harum Nusantara"
+          class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700">Tipe Konten</label>
+        <select id="type" class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
+          <option>UMKM</option>
+          <option>Personal Brand</option>
+          <option>Motivasi</option>
+          <option>Edukasi</option>
+          <option>Testimoni</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700">Gaya Narasi</label>
+        <select id="tone" class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
+          <option>Santai</option>
+          <option>Inspiratif</option>
+          <option>Edukasi</option>
+          <option>Profesional</option>
+          <option>Lucu</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700">Link Referral (opsional)</label>
+        <input id="referral" type="text" placeholder="https://"
+          class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
+      </div>
+    </div>
+
+    <!-- Generate Button -->
+    <div class="mt-6 text-center">
+      <button onclick="generateText()" id="generateBtn"
+        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">
+        Generate Narasi AI
+      </button>
+    </div>
+
+    <!-- Output -->
+    <div id="output" class="mt-6 hidden">
+      <h2 class="text-lg font-semibold mb-2 text-blue-700">🎉 Hasil Generasi AI</h2>
+
+      <div class="bg-slate-50 p-4 rounded-lg mb-4 border border-blue-100">
+        <h3 class="text-sm text-slate-500">Komentar Meta-Friendly:</h3>
+        <p id="comment" class="mt-2 text-slate-800"></p>
+      </div>
+
+      <div class="bg-slate-50 p-4 rounded-lg mb-4 border border-blue-100">
+        <h3 class="text-sm text-slate-500">Caption:</h3>
+        <p id="caption" class="mt-2 text-slate-800"></p>
+      </div>
+
+      <div class="bg-slate-50 p-4 rounded-lg border border-blue-100">
+        <h3 class="text-sm text-slate-500">Hashtag:</h3>
+        <p id="hashtags" class="mt-2 text-slate-800"></p>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-slate-400 mt-8">
+      Powered by <span class="text-blue-600 font-semibold">NPA Smart System</span> © 2025
+    </p>
+  </div>
+
+  <script>
+    let previewImage = (event) => {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const output = document.getElementById('preview');
+        output.innerHTML = `<img src='${reader.result}' class='h-48 rounded-xl shadow'/>`;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    };
+
+    async function generateText() {
+      const name = document.getElementById('name').value.trim() || "Produk Hebat";
+      const tone = document.getElementById('tone').value;
+      const type = document.getElementById('type').value;
+      const referral = document.getElementById('referral').value.trim();
+
+      const btn = document.getElementById('generateBtn');
+      btn.disabled = true;
+      btn.innerText = "Sedang memproses...";
+
+      await new Promise(r => setTimeout(r, 1200));
+
+      const comment = `${name} — keren banget prosesnya! 😍 
+Nggak cuma ${type.toLowerCase()}, tapi juga cerita perjuangan.
+Terus konsisten ya 💪
+Aku taruh info lengkapnya di sini 👇
+${referral || "(link)"}`;
+
+      const caption = `Bangkit bareng proses, bukan pamer hasil 💫 
+#BangkitBersama #RuangNpaSmartSystem`;
+
+      const hashtags = "#KontenLebihUtama #SmartCreator2025 #UMKMBerproses";
+
+      document.getElementById('comment').innerText = comment;
+      document.getElementById('caption').innerText = caption;
+      document.getElementById('hashtags').innerText = hashtags;
+
+      document.getElementById('output').classList.remove('hidden');
+      btn.disabled = false;
+      btn.innerText = "Generate Narasi AI";
+    }
+  </script>
+
+</body>
+  </html>
