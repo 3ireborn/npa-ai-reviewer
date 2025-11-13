@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NPA AI Reviewer — Hybrid Dark Neon</title>
+  <title>NPA AI Reviewer — Dark Neon Elegant (Double Neon)</title>
 
-  <!-- Tailwind for utility + custom CSS below -->
+  <!-- Tailwind (utility) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     :root{
-      --bg-a: #07101a;    /* dark base */
-      --bg-b: #0b1220;    /* dark depth */
-      --card-bg: #f7f0c7; /* soft gold/yellow card */
-      --card-text: #0b1220; /* dark text on card */
-      --muted: #7b8794;
+      --bg-1: #060710;
+      --bg-2: #0b1220;
+      --card-yellow: #f9e9b0; /* soft gold/yellow */
+      --card-text-dark: #081018;
+      --muted: #9aa4b3;
       --accent-blue: #3b82f6;
+      --accent-red: #f43f5e;
+      --accent-yellow: #facc15;
       --accent-purple: #A78BFA;
-      --neon-red: #f43f5e;
-      --neon-yellow: #facc15;
     }
 
     html,body{height:100%}
@@ -26,144 +26,153 @@
       margin:0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       background:
-        radial-gradient(800px 400px at 10% 10%, rgba(59,130,246,0.035), transparent 5%),
-        radial-gradient(700px 350px at 90% 90%, rgba(167,139,250,0.03), transparent 6%),
-        linear-gradient(180deg,var(--bg-a), var(--bg-b));
+        radial-gradient(800px 400px at 10% 8%, rgba(59,130,246,0.04), transparent 6%),
+        radial-gradient(700px 350px at 90% 92%, rgba(167,139,250,0.03), transparent 6%),
+        linear-gradient(180deg,var(--bg-1), var(--bg-2));
       color: #e6eef8;
       -webkit-font-smoothing:antialiased;
     }
 
-    /* Main centered container */
-    .page-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 16px; }
+    /* center */
+    .wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:36px; }
 
-    /* Card with neon border gradient (bordir) */
-    .neon-frame {
-      position: relative;
-      border-radius: 28px;
-      padding: 2px; /* space for gradient frame */
-      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      box-shadow: 0 12px 60px rgba(5,8,12,0.6);
-      max-width:920px;
-      width:100%;
+    /* DOUBLE NEON FRAME */
+    .double-neon {
+      position:relative;
+      border-radius:28px;
+      padding:4px; /* space for outer-outer gradient */
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
+      box-shadow: 0 18px 80px rgba(2,6,12,0.7);
+      max-width:980px; width:100%;
     }
-    .neon-frame::before {
+    /* outer gradient (blurred) */
+    .double-neon::before{
       content:"";
-      position:absolute; inset: -3px; z-index: -1;
-      border-radius: 30px;
-      background: conic-gradient(from 180deg at 50% 50%, var(--accent-blue), var(--neon-red), var(--neon-yellow), var(--accent-blue));
-      filter: blur(22px) saturate(160%);
-      opacity: 0.95;
+      position:absolute; inset:-6px; z-index:-3; border-radius:34px;
+      background: conic-gradient(from 180deg at 50% 50%, var(--accent-blue), var(--accent-red), var(--accent-yellow), var(--accent-blue));
+      filter: blur(26px) saturate(160%); opacity:0.85;
+    }
+    /* inner thin neon border */
+    .double-neon::after{
+      content:"";
+      position:absolute; inset:2px; z-index:-1; border-radius:26px;
+      background: linear-gradient(90deg, rgba(59,130,246,0.9), rgba(244,63,94,0.9), rgba(250,204,21,0.9));
+      -webkit-mask: linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0);
+      filter: blur(6px) saturate(120%);
+      opacity:0.95;
     }
 
-    /* Inner card */
-    .card {
-      border-radius: 24px;
+    /* inner card */
+    .inner {
+      position:relative;
+      z-index:2;
+      border-radius:22px;
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding: 22px;
-      color: #eaf0ff;
-      position: relative;
-      overflow: hidden;
+      padding:20px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
     }
 
-    /* Yellow center panel (form) */
+    /* yellow small panel (the central form) */
     .panel {
-      background: linear-gradient(180deg, rgba(247,240,199,0.98), rgba(252,245,210,0.96));
-      color: var(--card-text);
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 12px 30px rgba(16,12,6,0.12), inset 0 1px 0 rgba(255,255,255,0.3);
-    }
-
-    /* Upload box */
-    .upload-box {
-      border: 2px dashed rgba(11,18,32,0.07);
-      border-radius: 12px;
-      padding: 18px;
-      display:flex; flex-direction:column; gap:10px; align-items:center; justify-content:center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      box-shadow: 0 6px 18px rgba(10,12,16,0.06);
-      cursor: pointer;
-    }
-    .upload-box input[type=file] { display:block; width:100%; }
-
-    /* Inputs (yellow-ish) */
-    .field {
-      background: rgba(255,255,255,0.88);
-      border-radius: 10px;
-      padding: 12px 14px;
-      border: 1px solid rgba(11,18,32,0.06);
-      color: #08111a;
       width:100%;
+      max-width:720px;
+      margin:0 auto;
+      border-radius:18px;
+      background: linear-gradient(180deg, var(--card-yellow), #fff7da);
+      color: var(--card-text-dark);
+      padding:18px;
+      box-shadow: 0 16px 36px rgba(8,12,20,0.12);
+      border: 1px solid rgba(11,18,32,0.05);
+    }
+
+    /* upload box */
+    .upload {
+      border-radius:12px;
+      padding:14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.94));
+      border:2px dashed rgba(11,18,32,0.06);
+      display:flex; flex-direction:column; gap:8px; align-items:center; justify-content:center;
+    }
+    .upload input[type=file]{ width:100%; }
+
+    /* field style */
+    .field {
+      width:100%;
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid rgba(11,18,32,0.06);
+      background: rgba(255,255,255,0.98);
+      color: var(--card-text-dark);
       box-sizing:border-box;
     }
-    .field:focus { outline: none; box-shadow: 0 8px 30px rgba(250,204,21,0.12); border-color: rgba(250,204,21,0.9); }
+    .field:focus { outline:none; box-shadow:0 12px 40px rgba(250,204,21,0.08); border-color: rgba(250,204,21,0.9); }
 
-    /* Generate button (blue neon) */
+    /* generate button */
     .btn-gen {
       background: linear-gradient(90deg, #2563eb, #7c3aed);
       color: #07101a; font-weight:700;
-      padding:12px 20px; border-radius:12px; border:none;
-      box-shadow: 0 10px 40px rgba(59,130,246,0.18), 0 0 24px rgba(167,139,250,0.07);
+      padding:12px 18px; border-radius:12px; border:none;
+      box-shadow: 0 12px 40px rgba(59,130,246,0.12), 0 0 20px rgba(167,139,250,0.06);
     }
-    .btn-gen:hover { transform: translateY(-3px); transition: .18s; filter:brightness(1.05); }
+    .btn-gen:hover { transform: translateY(-3px); transition:.16s ease; filter:brightness(1.05); }
 
-    /* Output blocks like small cards */
-    .output-block {
-      border-radius:12px; padding:14px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.03); color:#eaf0ff;
+    /* outputs (dark blocks, white text) */
+    .out-block {
+      background: linear-gradient(180deg, rgba(12,16,22,0.92), rgba(8,12,18,0.92));
+      border-radius:12px; padding:14px; color:#eef6ff;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 8px 28px rgba(2,6,12,0.6);
     }
 
-    /* copy btn small */
     .copy-btn {
-      border-radius:8px; padding:6px 10px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
-      color:var(--muted);
+      background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04);
+      padding:6px 10px; border-radius:8px; color:var(--muted);
     }
 
-    @media (max-width:640px) {
-      .neon-frame { padding:1px; }
-      .card { padding:16px; }
-      .panel { padding:12px; }
+    @media (max-width:720px){
+      .panel { padding:14px; }
+      .double-neon::before { filter: blur(18px); }
+      .double-neon::after { filter: blur(4px); }
     }
   </style>
 </head>
 <body>
-  <div class="page-wrap">
-    <div class="neon-frame">
-      <div class="card">
+  <div class="wrap">
+    <div class="double-neon">
+      <div class="inner">
 
-        <!-- Header -->
+        <!-- header -->
         <div class="flex items-center gap-4 mb-4">
           <div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent-blue),var(--accent-purple));display:flex;align-items:center;justify-content:center;">
-            <img src="favicon.png" alt="NPA" style="width:36px;height:36px;border-radius:6px;"/>
+            <img src="favicon.png" alt="NPA" style="width:34px;height:34px;border-radius:6px;"/>
           </div>
           <div>
-            <h1 class="text-2xl font-semibold" style="color:#f8fafc">NPA AI Reviewer</h1>
-            <div style="color:var(--muted);font-size:13px">Hybrid · Upload gambar → AI analisa → Narasi (HOOK→MASALAH→SOLUSI→CTA)</div>
+            <h1 class="text-2xl font-semibold">NPA AI Reviewer</h1>
+            <div class="text-sm" style="color:var(--muted)">Dark Neon Elegant — Story Selling · Upload gambar → AI analisa → Narasi</div>
           </div>
         </div>
 
-        <!-- Yellow panel center -->
+        <!-- center panel (small yellow card) -->
         <div class="panel">
 
-          <!-- Upload box at top -->
-          <div id="uploadBox" class="upload-box mb-4">
-            <div class="text-sm" style="color:#0b1220">Upload gambar produk / referensi AI</div>
+          <!-- upload -->
+          <div class="upload mb-4">
+            <div class="text-sm font-medium" style="color:var(--card-text-dark)">Upload gambar produk / referensi AI</div>
             <input id="imageInput" type="file" accept="image/*" />
             <div id="preview" style="width:100%;display:flex;justify-content:center;align-items:center;"></div>
-            <div class="text-xs" style="color:#0b1220">(Gambar membantu AI mengerti konteks — optional tapi direkomendasikan)</div>
+            <div class="text-xs" style="color:var(--card-text-dark)">Gambar membantu AI memahami konteks — opsional tapi direkomendasikan</div>
           </div>
 
-          <!-- Form grid -->
+          <!-- form grid -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-
             <div class="md:col-span-2">
-              <label class="text-xs" style="color:#0b1220">Nama Produk / Judul (bisa kosong)</label>
-              <input id="name" class="field mt-2" placeholder="Contoh: Ngopi Bareng PakD" />
+              <label class="text-xs block mb-1" style="color:var(--card-text-dark)">Nama Produk / Judul</label>
+              <input id="name" class="field" placeholder="Contoh: Semangat Bangkit" />
             </div>
 
             <div>
-              <label class="text-xs" style="color:#0b1220">Preset Nama</label>
-              <select id="preset" class="field mt-2">
+              <label class="text-xs block mb-1" style="color:var(--card-text-dark)">Preset Nama</label>
+              <select id="preset" class="field">
                 <option value="">— Pilih Preset (opsional) —</option>
                 <option>Motivasi Pagi</option>
                 <option>Semangat Bangkit</option>
@@ -178,20 +187,19 @@
                 <option value="__custom__">— Custom —</option>
               </select>
             </div>
-
           </div>
 
-          <!-- manual editable always -->
+          <!-- manual -->
           <div class="mt-3">
-            <label class="text-xs" style="color:#0b1220">Nama / Keterangan (editable)</label>
-            <input id="nameManual" class="field mt-2" placeholder="Contoh: Ngopi bareng sama PakD" />
+            <label class="text-xs block mb-1" style="color:var(--card-text-dark)">Nama / Keterangan (editable)</label>
+            <input id="nameManual" class="field" placeholder="Contoh: Ngopi bareng sama PakD" />
           </div>
 
-          <!-- options row -->
+          <!-- options -->
           <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label class="text-xs" style="color:#0b1220">Tipe Konten</label>
-              <select id="type" class="field mt-2">
+              <label class="text-xs block mb-1" style="color:var(--card-text-dark)">Tipe Konten</label>
+              <select id="type" class="field">
                 <option>Campuran</option>
                 <option>Motivasi</option>
                 <option>UMKM</option>
@@ -201,8 +209,8 @@
             </div>
 
             <div>
-              <label class="text-xs" style="color:#0b1220">Gaya Narasi</label>
-              <select id="tone" class="field mt-2">
+              <label class="text-xs block mb-1" style="color:var(--card-text-dark)">Gaya Narasi</label>
+              <select id="tone" class="field">
                 <option>Inspiratif</option>
                 <option>Santai</option>
                 <option>Profesional</option>
@@ -211,187 +219,183 @@
             </div>
 
             <div>
-              <label class="text-xs" style="color:#0b1220">Link Referral (opsional)</label>
-              <input id="referral" class="field mt-2" placeholder="s.id/..." />
+              <label class="text-xs block mb-1" style="color:var(--card-text-dark)">Link Referral (opsional)</label>
+              <input id="referral" class="field" placeholder="s.id/..." />
             </div>
           </div>
 
           <!-- actions -->
           <div class="mt-4 flex items-center gap-3">
             <button id="generateBtn" class="btn-gen">Generate Narasi AI 🚀</button>
-            <button id="resetBtn" class="px-4 py-2 rounded-md border border-[rgba(11,18,32,0.06)]" style="color:#0b1220;background:transparent">Reset</button>
-            <div class="ml-auto text-xs" style="color:#0b1220">Powered by <b style="color:var(--accent-purple)">NPA Smart System</b></div>
+            <button id="resetBtn" class="px-4 py-2 rounded-md border border-[rgba(11,18,32,0.06)]" style="background:transparent;color:var(--card-text-dark)">Reset</button>
+            <div class="ml-auto text-xs" style="color:var(--card-text-dark)">Powered by <b style="color:var(--accent-purple)">NPA Smart System</b></div>
           </div>
 
         </div> <!-- /panel -->
 
-        <!-- Output section -->
-        <div id="outputArea" class="mt-6 grid gap-4" style="display:none;">
-          <div class="output-block">
-            <div style="font-size:14px;color:var(--muted)">Komentar (pilih & copy lalu paste ke kolom komentar Facebook)</div>
+        <!-- OUTPUT (dark blocks) -->
+        <div id="outputArea" class="mt-6 space-y-4" style="display:none;">
+          <div class="out-block">
+            <div class="text-sm" style="color:var(--muted)">Komentar (pilih & copy lalu paste ke kolom komentar Facebook)</div>
             <div id="commentList" class="mt-3 space-y-3"></div>
           </div>
 
-          <div class="output-block">
-            <div style="font-size:14px;color:var(--muted)">Caption (varian) — pola HOOK → MASALAH → SOLUSI → CTA → TAG</div>
+          <div class="out-block">
+            <div class="text-sm" style="color:var(--muted)">Caption (varian) — pola HOOK → MASALAH → SOLUSI → CTA → TAG</div>
             <div id="captionList" class="mt-3 space-y-3"></div>
           </div>
 
-          <div class="output-block">
-            <div style="font-size:14px;color:var(--muted)">Hashtags</div>
+          <div class="out-block">
+            <div class="text-sm" style="color:var(--muted)">Hashtags</div>
             <div id="hashtagsBox" class="mt-2" style="color:var(--muted)"></div>
             <div id="metaAdvice" class="mt-2 text-xs" style="color:var(--muted)"></div>
           </div>
         </div>
 
-      </div> <!-- card -->
-    </div> <!-- neon frame -->
+      </div> <!-- inner -->
+    </div> <!-- double-neon -->
   </div>
 
-<script>
-  // Elements
-  const preset = document.getElementById('preset');
-  const nameManual = document.getElementById('nameManual');
-  const nameMain = document.getElementById('name');
-  const imageInput = document.getElementById('imageInput');
-  const preview = document.getElementById('preview');
-  const generateBtn = document.getElementById('generateBtn');
-  const resetBtn = document.getElementById('resetBtn');
+  <script>
+    // elements
+    const preset = document.getElementById('preset');
+    const nameManual = document.getElementById('nameManual');
+    const nameMain = document.getElementById('name');
+    const imageInput = document.getElementById('imageInput');
+    const preview = document.getElementById('preview');
+    const generateBtn = document.getElementById('generateBtn');
+    const resetBtn = document.getElementById('resetBtn');
 
-  const outputArea = document.getElementById('outputArea');
-  const commentList = document.getElementById('commentList');
-  const captionList = document.getElementById('captionList');
-  const hashtagsBox = document.getElementById('hashtagsBox');
-  const metaAdvice = document.getElementById('metaAdvice');
+    const outputArea = document.getElementById('outputArea');
+    const commentList = document.getElementById('commentList');
+    const captionList = document.getElementById('captionList');
+    const hashtagsBox = document.getElementById('hashtagsBox');
+    const metaAdvice = document.getElementById('metaAdvice');
 
-  // Sync preset -> name fields
-  preset.addEventListener('change', () => {
-    const v = preset.value;
-    if (v === "__custom__") {
-      nameManual.value = "";
-      nameMain.value = "";
-      nameManual.focus();
-    } else {
-      nameManual.value = v;
-      nameMain.value = v;
-    }
-  });
-  nameManual.addEventListener('input', ()=> nameMain.value = nameManual.value);
-
-  // Image preview and base64
-  let currentImageBase64 = null;
-  imageInput.addEventListener('change', (e)=>{
-    const f = e.target.files?.[0];
-    if (!f) { preview.innerHTML = ''; currentImageBase64 = null; return;}
-    const reader = new FileReader();
-    reader.onload = ()=> {
-      const src = reader.result;
-      preview.innerHTML = `<img src="${src}" alt="preview" style="max-height:120px;border-radius:8px;box-shadow:0 8px 24px rgba(11,18,32,0.12)"/>`;
-      currentImageBase64 = src.split(',')[1];
-    };
-    reader.readAsDataURL(f);
-  });
-
-  // Reset
-  resetBtn.addEventListener('click', ()=> {
-    preset.value = ""; nameManual.value = ""; nameMain.value = ""; document.getElementById('type').value="Campuran";
-    document.getElementById('tone').value="Inspiratif"; document.getElementById('referral').value="";
-    imageInput.value = ""; preview.innerHTML = ""; currentImageBase64 = null;
-    outputArea.style.display = 'none'; commentList.innerHTML=''; captionList.innerHTML=''; hashtagsBox.innerText=''; metaAdvice.innerText='';
-  });
-
-  // Generate action
-  generateBtn.addEventListener('click', async ()=>{
-    const name = nameMain.value.trim() || nameManual.value.trim() || "Konten Kamu";
-    const type = document.getElementById('type').value || "Campuran";
-    const tone = document.getElementById('tone').value || "Inspiratif";
-    const referral = document.getElementById('referral').value.trim();
-
-    generateBtn.disabled = true; generateBtn.innerText = "Memproses...";
-
-    try {
-      const resp = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          imageBase64: currentImageBase64,
-          name, type, tone, referral
-        })
-      });
-
-      if (!resp.ok) {
-        const txt = await resp.text();
-        throw new Error(txt || 'Server error');
+    // sync preset -> name
+    preset.addEventListener('change', () => {
+      const v = preset.value;
+      if (v === "__custom__") {
+        nameManual.value = "";
+        nameMain.value = "";
+        nameManual.focus();
+      } else {
+        nameManual.value = v;
+        nameMain.value = v;
       }
+    });
+    nameManual.addEventListener('input', ()=> nameMain.value = nameManual.value);
 
-      const data = await resp.json();
+    // image preview -> base64
+    let currentImageBase64 = null;
+    imageInput.addEventListener('change', (e) => {
+      const f = e.target.files?.[0];
+      if (!f) { preview.innerHTML = ''; currentImageBase64 = null; return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const src = reader.result;
+        preview.innerHTML = `<img src="${src}" alt="preview" style="max-height:140px;border-radius:10px;box-shadow:0 8px 28px rgba(2,6,12,0.18);"/>`;
+        currentImageBase64 = src.split(',')[1];
+      };
+      reader.readAsDataURL(f);
+    });
 
-      // Comments: frontend will append referral link to variant index 1 (2nd)
-      commentList.innerHTML = "";
-      data.commentVariants.forEach((cmt, i) => {
-        let html = `<div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="font-size:12px;color:var(--muted)">Variant ${i+1}</div>
-          <div style="white-space:pre-wrap;">${escapeHtml(cmt)}</div>
-          <div><button class="copy-btn" data-text="${encodeURIComponent(cmt)}">Copy</button></div>
-        </div>`;
+    // reset
+    resetBtn.addEventListener('click', ()=> {
+      preset.value = ""; nameManual.value = ""; nameMain.value = ""; document.getElementById('type').value="Campuran";
+      document.getElementById('tone').value="Inspiratif"; document.getElementById('referral').value="";
+      imageInput.value = ""; preview.innerHTML = ""; currentImageBase64 = null;
+      outputArea.style.display = 'none'; commentList.innerHTML=''; captionList.innerHTML=''; hashtagsBox.innerText=''; metaAdvice.innerText='';
+    });
 
-        if (i === 1 && data.referralLink) {
-          // append soft link block
-          html = html.replace('</div></div>', `<div style="font-size:13px;color:var(--muted);margin-top:6px">Info lengkap di sini: <a href="${data.referralLink}" target="_blank" style="color:var(--accent-blue);text-decoration:underline">${data.referralLink}</a></div></div></div>`);
+    // generate
+    generateBtn.addEventListener('click', async () => {
+      const name = nameMain.value.trim() || nameManual.value.trim() || "Konten Kamu";
+      const type = document.getElementById('type').value || "Campuran";
+      const tone = document.getElementById('tone').value || "Inspiratif";
+      const referral = document.getElementById('referral').value.trim();
+
+      generateBtn.disabled = true; generateBtn.innerText = "Memproses...";
+
+      try {
+        const resp = await fetch('/api/generate', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            imageBase64: currentImageBase64,
+            name, type, tone, referral
+          })
+        });
+
+        if (!resp.ok) {
+          const txt = await resp.text();
+          throw new Error(txt || 'Server error');
         }
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'output-block';
-        wrapper.innerHTML = html;
-        commentList.appendChild(wrapper);
-      });
+        const data = await resp.json();
 
-      // Captions
-      captionList.innerHTML = "";
-      data.captionVariants.forEach((cap, i)=>{
-        const wrapper = document.createElement('div');
-        wrapper.className = 'output-block';
-        const html = `<div style="font-size:12px;color:var(--muted)">Variant ${i+1}</div>
-          <div style="white-space:pre-wrap;margin-top:6px">${escapeHtml(cap)}</div>
-          <div style="margin-top:8px"><button class="copy-btn" data-text="${encodeURIComponent(cap)}">Copy Caption</button></div>`;
-        wrapper.innerHTML = html;
-        captionList.appendChild(wrapper);
-      });
+        // Comments
+        commentList.innerHTML = "";
+        (data.commentVariants || []).forEach((cmt, i) => {
+          let html = `<div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:12px;color:var(--muted)">Variant ${i+1}</div>
+              <div style="white-space:pre-wrap;color:#eef6ff">${escapeHtml(cmt)}</div>
+              <div><button class="copy-btn" data-text="${encodeURIComponent(cmt)}">Copy</button></div>
+            </div>`;
 
-      // Hashtags and meta advice
-      hashtagsBox.innerText = (data.hashtags || []).join(' ');
-      metaAdvice.innerText = data.metaAdvice || '';
+          if (i === 1 && data.referralLink) {
+            html += `<div style="margin-top:8px;font-size:13px;color:var(--muted)">Info lengkap (soft link): <a href="${data.referralLink}" target="_blank" style="color:var(--accent-blue);text-decoration:underline">${data.referralLink}</a></div>`;
+          }
 
-      // Attach copy handlers
-      document.querySelectorAll('.copy-btn').forEach(btn=>{
-        btn.onclick = ()=>{
-          const txt = decodeURIComponent(btn.getAttribute('data-text'));
-          navigator.clipboard.writeText(txt).then(()=> alert('Teks di-copy ✅'));
-        };
-      });
+          const wrap = document.createElement('div');
+          wrap.className = 'out-block';
+          wrap.innerHTML = html;
+          commentList.appendChild(wrap);
+        });
 
-      outputArea.style.display = 'block';
-      window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
+        // Captions
+        captionList.innerHTML = "";
+        (data.captionVariants || []).forEach((cap, i) => {
+          const wrap = document.createElement('div');
+          wrap.className = 'out-block';
+          wrap.innerHTML = `<div style="font-size:12px;color:var(--muted)">Variant ${i+1}</div>
+            <div style="white-space:pre-wrap;margin-top:8px;color:#eef6ff">${escapeHtml(cap)}</div>
+            <div style="margin-top:8px"><button class="copy-btn" data-text="${encodeURIComponent(cap)}">Copy Caption</button></div>`;
+          captionList.appendChild(wrap);
+        });
 
-    } catch (err) {
-      console.error(err);
-      alert('Gagal: ' + (err.message || err));
-    } finally {
-      generateBtn.disabled = false; generateBtn.innerText = "Generate Narasi AI 🚀";
+        hashtagsBox.innerText = (data.hashtags || []).join(' ');
+        metaAdvice.innerText = data.metaAdvice || '';
+
+        // copy handlers
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const t = decodeURIComponent(btn.getAttribute('data-text'));
+            navigator.clipboard.writeText(t).then(()=> alert('Teks di-copy ✅'));
+          });
+        });
+
+        outputArea.style.display = 'block';
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+      } catch (err) {
+        console.error(err);
+        alert('Gagal generate: ' + (err.message || err));
+      } finally {
+        generateBtn.disabled = false; generateBtn.innerText = "Generate Narasi AI 🚀";
+      }
+    });
+
+    // escape helper
+    function escapeHtml(str){
+      if (!str) return '';
+      return String(str)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'",'&#039;');
     }
-  });
-
-  // basic HTML escape to avoid injection in innerHTML (we use escapeHtml when inserting)
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-      .replaceAll('&','&amp;')
-      .replaceAll('<','&lt;')
-      .replaceAll('>','&gt;')
-      .replaceAll('"','&quot;')
-      .replaceAll("'",'&#039;')
-      .replaceAll('\n','\n');
-  }
-</script>
+  </script>
 </body>
 </html>
