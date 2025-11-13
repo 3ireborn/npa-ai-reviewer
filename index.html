@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NPA AI Reviewer — Dark Neon</title>
+  <title>NPA AI Reviewer — Hybrid Dark Neon</title>
 
-  <!-- Tailwind -->
+  <!-- Tailwind for utility + custom CSS below -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     :root{
-      --bg-1: #06070a;     /* deep background */
-      --bg-2: #07101a;
-      --card: rgba(10,12,16,0.86);
-      --muted: #9aa7bb;
-      --accent: #A78BFA;   /* purple accent */
-      --input-yellow: #facc15;
-      --neon-blue: #3b82f6;
+      --bg-a: #07101a;    /* dark base */
+      --bg-b: #0b1220;    /* dark depth */
+      --card-bg: #f7f0c7; /* soft gold/yellow card */
+      --card-text: #0b1220; /* dark text on card */
+      --muted: #7b8794;
+      --accent-blue: #3b82f6;
+      --accent-purple: #A78BFA;
       --neon-red: #f43f5e;
       --neon-yellow: #facc15;
     }
@@ -25,365 +25,373 @@
     body{
       margin:0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(59,130,246,0.06), transparent 10%),
-                  radial-gradient(900px 450px at 90% 90%, rgba(164,99,255,0.04), transparent 12%),
-                  linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      background:
+        radial-gradient(800px 400px at 10% 10%, rgba(59,130,246,0.035), transparent 5%),
+        radial-gradient(700px 350px at 90% 90%, rgba(167,139,250,0.03), transparent 6%),
+        linear-gradient(180deg,var(--bg-a), var(--bg-b));
       color: #e6eef8;
       -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
     }
 
-    /* neon border card (full glow) */
-    .neon-card {
+    /* Main centered container */
+    .page-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 16px; }
+
+    /* Card with neon border gradient (bordir) */
+    .neon-frame {
       position: relative;
-      border-radius: 16px;
-      overflow: visible;
-      isolation:isolate;
+      border-radius: 28px;
+      padding: 2px; /* space for gradient frame */
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 12px 60px rgba(5,8,12,0.6);
+      max-width:920px;
+      width:100%;
     }
-    .neon-card::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      z-index: 0;
-      border-radius: 18px;
-      padding:1px;
-      background: conic-gradient(from 180deg at 50% 50%, var(--neon-blue), var(--neon-red), var(--neon-yellow), var(--neon-blue));
-      filter: blur(10px) saturate(140%);
+    .neon-frame::before {
+      content:"";
+      position:absolute; inset: -3px; z-index: -1;
+      border-radius: 30px;
+      background: conic-gradient(from 180deg at 50% 50%, var(--accent-blue), var(--neon-red), var(--neon-yellow), var(--accent-blue));
+      filter: blur(22px) saturate(160%);
       opacity: 0.95;
-      transform: translateZ(0);
     }
-    .neon-card > .card-inner {
+
+    /* Inner card */
+    .card {
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding: 22px;
+      color: #eaf0ff;
       position: relative;
-      z-index: 2;
-      border-radius: 15px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding: 20px;
-      border: 1px solid rgba(255,255,255,0.04);
-      box-shadow: 0 8px 40px rgba(10,12,16,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      overflow: hidden;
     }
 
-    /* Input glow */
-    .neon-input {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border: 1px solid rgba(255,255,255,0.04);
-      color: #f1f5f9;
-      box-shadow: 0 6px 18px rgba(167,139,250,0.06), 0 0 10px rgba(59,130,246,0.02);
-    }
-    .neon-input:focus {
-      outline: none;
-      box-shadow: 0 6px 30px rgba(167,139,250,0.16), 0 0 14px rgba(59,130,246,0.18);
-      border-color: rgba(167,139,250,0.7);
+    /* Yellow center panel (form) */
+    .panel {
+      background: linear-gradient(180deg, rgba(247,240,199,0.98), rgba(252,245,210,0.96));
+      color: var(--card-text);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(16,12,6,0.12), inset 0 1px 0 rgba(255,255,255,0.3);
     }
 
-    /* bright yellow input style */
-    .yellow-input {
-      background: linear-gradient(180deg, rgba(250, 246, 210, 0.06), rgba(250, 246, 210, 0.02));
-      color: #0b0b0b;
-      border: 1px solid rgba(250, 246, 210, 0.12);
-      box-shadow: 0 6px 26px rgba(250, 204, 21, 0.09);
-    }
-    .yellow-input:focus {
-      box-shadow: 0 8px 36px rgba(250,204,21,0.24), 0 0 18px rgba(244,63,94,0.06);
-      border-color: rgba(250,204,21,0.9);
-    }
-
-    .btn-accent {
-      background: linear-gradient(90deg, #7c3aed, #3b82f6);
-      color: #07101a;
-      font-weight: 700;
-      box-shadow: 0 8px 30px rgba(123,65,255,0.18), 0 0 18px rgba(59,130,246,0.12);
-    }
-    .btn-accent:hover { filter: brightness(1.05); transform: translateY(-2px); transition: .18s ease; }
-
-    /* small card neon outlines for inner blocks */
-    .inner-block {
+    /* Upload box */
+    .upload-box {
+      border: 2px dashed rgba(11,18,32,0.07);
       border-radius: 12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 6px 18px rgba(10,12,16,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      padding: 18px;
+      display:flex; flex-direction:column; gap:10px; align-items:center; justify-content:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 6px 18px rgba(10,12,16,0.06);
+      cursor: pointer;
+    }
+    .upload-box input[type=file] { display:block; width:100%; }
+
+    /* Inputs (yellow-ish) */
+    .field {
+      background: rgba(255,255,255,0.88);
+      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1px solid rgba(11,18,32,0.06);
+      color: #08111a;
+      width:100%;
+      box-sizing:border-box;
+    }
+    .field:focus { outline: none; box-shadow: 0 8px 30px rgba(250,204,21,0.12); border-color: rgba(250,204,21,0.9); }
+
+    /* Generate button (blue neon) */
+    .btn-gen {
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      color: #07101a; font-weight:700;
+      padding:12px 20px; border-radius:12px; border:none;
+      box-shadow: 0 10px 40px rgba(59,130,246,0.18), 0 0 24px rgba(167,139,250,0.07);
+    }
+    .btn-gen:hover { transform: translateY(-3px); transition: .18s; filter:brightness(1.05); }
+
+    /* Output blocks like small cards */
+    .output-block {
+      border-radius:12px; padding:14px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03); color:#eaf0ff;
     }
 
+    /* copy btn small */
     .copy-btn {
-      border: 1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.02);
-      color: var(--muted);
+      border-radius:8px; padding:6px 10px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
+      color:var(--muted);
     }
 
-    /* responsiveness small tweaks */
     @media (max-width:640px) {
-      .neon-card::before { filter: blur(8px); }
+      .neon-frame { padding:1px; }
+      .card { padding:16px; }
+      .panel { padding:12px; }
     }
   </style>
 </head>
+<body>
+  <div class="page-wrap">
+    <div class="neon-frame">
+      <div class="card">
 
-<body class="min-h-screen flex items-start justify-center py-10 px-4">
-
-  <div class="w-full max-w-3xl">
-    <div class="neon-card">
-      <div class="card-inner">
-
-        <!-- HEADER -->
+        <!-- Header -->
         <div class="flex items-center gap-4 mb-4">
-          <img src="favicon.png" class="h-12 w-12 rounded-full shadow" alt="logo" />
+          <div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent-blue),var(--accent-purple));display:flex;align-items:center;justify-content:center;">
+            <img src="favicon.png" alt="NPA" style="width:36px;height:36px;border-radius:6px;"/>
+          </div>
           <div>
-            <h1 class="text-2xl font-semibold">NPA AI Reviewer</h1>
-            <div class="text-sm" style="color:var(--muted)">Dark Neon · Auto caption HOOK → MASALAH → SOLUSI → CTA</div>
+            <h1 class="text-2xl font-semibold" style="color:#f8fafc">NPA AI Reviewer</h1>
+            <div style="color:var(--muted);font-size:13px">Hybrid · Upload gambar → AI analisa → Narasi (HOOK→MASALAH→SOLUSI→CTA)</div>
           </div>
         </div>
 
-        <!-- FORM GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Yellow panel center -->
+        <div class="panel">
 
-          <div class="md:col-span-2">
-            <label class="text-xs" style="color:var(--muted)">Nama Produk / Judul</label>
-            <input id="name" placeholder="Judul atau nama (boleh kosong)" class="mt-2 w-full p-3 rounded-lg neon-input" />
+          <!-- Upload box at top -->
+          <div id="uploadBox" class="upload-box mb-4">
+            <div class="text-sm" style="color:#0b1220">Upload gambar produk / referensi AI</div>
+            <input id="imageInput" type="file" accept="image/*" />
+            <div id="preview" style="width:100%;display:flex;justify-content:center;align-items:center;"></div>
+            <div class="text-xs" style="color:#0b1220">(Gambar membantu AI mengerti konteks — optional tapi direkomendasikan)</div>
           </div>
 
-          <div>
-            <label class="text-xs" style="color:var(--muted)">Preset Nama</label>
-            <select id="preset" class="mt-2 w-full p-3 rounded-lg neon-input">
-              <option value="">— Pilih Preset (opsional) —</option>
-              <option>Motivasi Pagi</option>
-              <option>Semangat Bangkit</option>
-              <option>Ngopi Bareng</option>
-              <option>UMKM Lokal</option>
-              <option>Perjalanan Hidup</option>
-              <option>Edukasi Ringan</option>
-              <option>Sharing Insight</option>
-              <option>Proses Berkarya</option>
-              <option>Tips Produktif</option>
-              <option>Konten Harian</option>
-              <option value="__custom__">— Custom —</option>
-            </select>
+          <!-- Form grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+            <div class="md:col-span-2">
+              <label class="text-xs" style="color:#0b1220">Nama Produk / Judul (bisa kosong)</label>
+              <input id="name" class="field mt-2" placeholder="Contoh: Ngopi Bareng PakD" />
+            </div>
+
+            <div>
+              <label class="text-xs" style="color:#0b1220">Preset Nama</label>
+              <select id="preset" class="field mt-2">
+                <option value="">— Pilih Preset (opsional) —</option>
+                <option>Motivasi Pagi</option>
+                <option>Semangat Bangkit</option>
+                <option>Ngopi Bareng</option>
+                <option>UMKM Lokal</option>
+                <option>Perjalanan Hidup</option>
+                <option>Edukasi Ringan</option>
+                <option>Sharing Insight</option>
+                <option>Proses Berkarya</option>
+                <option>Tips Produktif</option>
+                <option>Konten Harian</option>
+                <option value="__custom__">— Custom —</option>
+              </select>
+            </div>
+
           </div>
 
-        </div>
-
-        <!-- manual name (always visible) -->
-        <div class="mt-4">
-          <label class="text-xs" style="color:var(--muted)">Nama / Keterangan (editable)</label>
-          <input id="nameManual" placeholder="Contoh: Ngopi bareng sama PakD" class="mt-2 w-full p-3 rounded-lg neon-input" />
-        </div>
-
-        <!-- options row -->
-        <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="text-xs" style="color:var(--muted)">Tipe Konten</label>
-            <select id="type" class="mt-2 w-full p-3 rounded-lg neon-input">
-              <option>Campuran</option>
-              <option>Motivasi</option>
-              <option>UMKM</option>
-              <option>Personal</option>
-              <option>Review Produk</option>
-            </select>
+          <!-- manual editable always -->
+          <div class="mt-3">
+            <label class="text-xs" style="color:#0b1220">Nama / Keterangan (editable)</label>
+            <input id="nameManual" class="field mt-2" placeholder="Contoh: Ngopi bareng sama PakD" />
           </div>
 
-          <div>
-            <label class="text-xs" style="color:var(--muted)">Gaya Narasi</label>
-            <select id="tone" class="mt-2 w-full p-3 rounded-lg neon-input">
-              <option>Inspiratif</option>
-              <option>Santai</option>
-              <option>Profesional</option>
-              <option>Friendly</option>
-            </select>
+          <!-- options row -->
+          <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label class="text-xs" style="color:#0b1220">Tipe Konten</label>
+              <select id="type" class="field mt-2">
+                <option>Campuran</option>
+                <option>Motivasi</option>
+                <option>UMKM</option>
+                <option>Personal</option>
+                <option>Review Produk</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="text-xs" style="color:#0b1220">Gaya Narasi</label>
+              <select id="tone" class="field mt-2">
+                <option>Inspiratif</option>
+                <option>Santai</option>
+                <option>Profesional</option>
+                <option>Friendly</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="text-xs" style="color:#0b1220">Link Referral (opsional)</label>
+              <input id="referral" class="field mt-2" placeholder="s.id/..." />
+            </div>
           </div>
 
-          <div>
-            <label class="text-xs" style="color:var(--muted)">Link Referral (opsional)</label>
-            <input id="referral" placeholder="s.id/..." class="mt-2 w-full p-3 rounded-lg yellow-input" />
-          </div>
-        </div>
-
-        <!-- image upload -->
-        <div class="mt-4 inner-block p-4">
-          <label class="text-xs" style="color:var(--muted)">Upload Gambar</label>
-          <div class="mt-2">
-            <input id="imageInput" type="file" accept="image/*" onchange="previewImage(event)" class="text-sm text-[var(--muted)]" />
-            <div id="preview" class="mt-3"></div>
-          </div>
-        </div>
-
-        <!-- buttons -->
-        <div class="mt-6 flex items-center gap-3">
-          <button id="generateBtn" onclick="generateText()" class="btn-accent px-6 py-3 rounded-lg">Generate Narasi AI</button>
-          <button onclick="resetForm()" class="px-4 py-2 rounded-lg border border-[rgba(255,255,255,0.06)] text-[var(--muted)]">Reset</button>
-          <div class="ml-auto text-xs" style="color:var(--muted)">Powered by <b style="color:var(--accent)">NPA Smart System</b></div>
-        </div>
-
-      </div> <!-- /card-inner -->
-    </div> <!-- /neon-card -->
-
-    <!-- OUTPUT -->
-    <div id="outputCard" class="mt-6 neon-card" style="display:none">
-      <div class="card-inner">
-        <h2 class="text-lg font-semibold mb-3">🎯 Hasil Generasi</h2>
-
-        <div class="grid gap-4">
-          <div>
-            <div class="text-xs" style="color:var(--muted)">Komentar (varian)</div>
-            <div id="comment" class="space-y-3 mt-2"></div>
+          <!-- actions -->
+          <div class="mt-4 flex items-center gap-3">
+            <button id="generateBtn" class="btn-gen">Generate Narasi AI 🚀</button>
+            <button id="resetBtn" class="px-4 py-2 rounded-md border border-[rgba(11,18,32,0.06)]" style="color:#0b1220;background:transparent">Reset</button>
+            <div class="ml-auto text-xs" style="color:#0b1220">Powered by <b style="color:var(--accent-purple)">NPA Smart System</b></div>
           </div>
 
-          <div>
-            <div class="text-xs" style="color:var(--muted)">Caption (varian)</div>
-            <div id="caption" class="space-y-3 mt-2"></div>
+        </div> <!-- /panel -->
+
+        <!-- Output section -->
+        <div id="outputArea" class="mt-6 grid gap-4" style="display:none;">
+          <div class="output-block">
+            <div style="font-size:14px;color:var(--muted)">Komentar (pilih & copy lalu paste ke kolom komentar Facebook)</div>
+            <div id="commentList" class="mt-3 space-y-3"></div>
           </div>
 
-          <div>
-            <div class="text-xs" style="color:var(--muted)">Hashtags</div>
-            <div id="hashtags" class="p-3 rounded bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.03)] mt-2" style="color:var(--muted)"></div>
+          <div class="output-block">
+            <div style="font-size:14px;color:var(--muted)">Caption (varian) — pola HOOK → MASALAH → SOLUSI → CTA → TAG</div>
+            <div id="captionList" class="mt-3 space-y-3"></div>
           </div>
 
-          <div>
-            <div id="metaAdvice" class="text-xs" style="color:var(--muted)"></div>
+          <div class="output-block">
+            <div style="font-size:14px;color:var(--muted)">Hashtags</div>
+            <div id="hashtagsBox" class="mt-2" style="color:var(--muted)"></div>
+            <div id="metaAdvice" class="mt-2 text-xs" style="color:var(--muted)"></div>
           </div>
         </div>
-      </div>
-    </div>
 
+      </div> <!-- card -->
+    </div> <!-- neon frame -->
   </div>
 
-  <!-- SCRIPT -->
-  <script>
-    // Elements
-    const preset = document.getElementById('preset');
-    const nameManual = document.getElementById('nameManual');
-    const nameMain = document.getElementById('name');
-    const preview = document.getElementById('preview');
-    const outputCard = document.getElementById('outputCard');
-    const commentEl = document.getElementById('comment');
-    const captionEl = document.getElementById('caption');
-    const hashtagsEl = document.getElementById('hashtags');
-    const metaAdviceEl = document.getElementById('metaAdvice');
+<script>
+  // Elements
+  const preset = document.getElementById('preset');
+  const nameManual = document.getElementById('nameManual');
+  const nameMain = document.getElementById('name');
+  const imageInput = document.getElementById('imageInput');
+  const preview = document.getElementById('preview');
+  const generateBtn = document.getElementById('generateBtn');
+  const resetBtn = document.getElementById('resetBtn');
 
-    // sync preset -> nameManual and nameMain
-    preset.addEventListener('change', () => {
-      const v = preset.value;
-      if (v === "__custom__") {
-        nameManual.value = "";
-        nameMain.value = "";
-        nameManual.focus();
-      } else {
-        nameManual.value = v;
-        nameMain.value = v;
-      }
-    });
+  const outputArea = document.getElementById('outputArea');
+  const commentList = document.getElementById('commentList');
+  const captionList = document.getElementById('captionList');
+  const hashtagsBox = document.getElementById('hashtagsBox');
+  const metaAdvice = document.getElementById('metaAdvice');
 
-    // manual input reflects to main
-    nameManual.addEventListener('input', () => {
-      nameMain.value = nameManual.value;
-    });
-
-    // image preview base64
-    let currentImageBase64 = null;
-    function previewImage(event) {
-      const f = event.target.files?.[0];
-      if (!f) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        preview.innerHTML = `<img src="${reader.result}" class="rounded-lg max-h-48 object-contain border border-[rgba(255,255,255,0.03)]" />`;
-        currentImageBase64 = reader.result.split(',')[1];
-      };
-      reader.readAsDataURL(f);
-    }
-
-    function resetForm() {
-      preset.value = "";
+  // Sync preset -> name fields
+  preset.addEventListener('change', () => {
+    const v = preset.value;
+    if (v === "__custom__") {
       nameManual.value = "";
       nameMain.value = "";
-      document.getElementById('type').value = "Campuran";
-      document.getElementById('tone').value = "Inspiratif";
-      document.getElementById('referral').value = "";
-      document.getElementById('imageInput').value = "";
-      preview.innerHTML = "";
-      outputCard.style.display = 'none';
-      commentEl.innerHTML = "";
-      captionEl.innerHTML = "";
-      hashtagsEl.innerHTML = "";
-      metaAdviceEl.innerText = "";
+      nameManual.focus();
+    } else {
+      nameManual.value = v;
+      nameMain.value = v;
     }
+  });
+  nameManual.addEventListener('input', ()=> nameMain.value = nameManual.value);
 
-    // generate
-    async function generateText() {
-      const name = nameMain.value.trim() || nameManual.value.trim() || "Konten Kamu";
-      const type = document.getElementById('type').value || "Campuran";
-      const tone = document.getElementById('tone').value || "Inspiratif";
-      const referral = document.getElementById('referral').value.trim();
+  // Image preview and base64
+  let currentImageBase64 = null;
+  imageInput.addEventListener('change', (e)=>{
+    const f = e.target.files?.[0];
+    if (!f) { preview.innerHTML = ''; currentImageBase64 = null; return;}
+    const reader = new FileReader();
+    reader.onload = ()=> {
+      const src = reader.result;
+      preview.innerHTML = `<img src="${src}" alt="preview" style="max-height:120px;border-radius:8px;box-shadow:0 8px 24px rgba(11,18,32,0.12)"/>`;
+      currentImageBase64 = src.split(',')[1];
+    };
+    reader.readAsDataURL(f);
+  });
 
-      const btn = document.getElementById('generateBtn');
-      btn.disabled = true;
-      btn.innerText = "Memproses...";
+  // Reset
+  resetBtn.addEventListener('click', ()=> {
+    preset.value = ""; nameManual.value = ""; nameMain.value = ""; document.getElementById('type').value="Campuran";
+    document.getElementById('tone').value="Inspiratif"; document.getElementById('referral').value="";
+    imageInput.value = ""; preview.innerHTML = ""; currentImageBase64 = null;
+    outputArea.style.display = 'none'; commentList.innerHTML=''; captionList.innerHTML=''; hashtagsBox.innerText=''; metaAdvice.innerText='';
+  });
 
-      try {
-        const resp = await fetch('/api/generate', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({
-            imageBase64: currentImageBase64,
-            name, type, tone, referral
-          })
-        });
+  // Generate action
+  generateBtn.addEventListener('click', async ()=>{
+    const name = nameMain.value.trim() || nameManual.value.trim() || "Konten Kamu";
+    const type = document.getElementById('type').value || "Campuran";
+    const tone = document.getElementById('tone').value || "Inspiratif";
+    const referral = document.getElementById('referral').value.trim();
 
-        if (!resp.ok) {
-          const txt = await resp.text();
-          throw new Error(txt || 'Server error');
+    generateBtn.disabled = true; generateBtn.innerText = "Memproses...";
+
+    try {
+      const resp = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          imageBase64: currentImageBase64,
+          name, type, tone, referral
+        })
+      });
+
+      if (!resp.ok) {
+        const txt = await resp.text();
+        throw new Error(txt || 'Server error');
+      }
+
+      const data = await resp.json();
+
+      // Comments: frontend will append referral link to variant index 1 (2nd)
+      commentList.innerHTML = "";
+      data.commentVariants.forEach((cmt, i) => {
+        let html = `<div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:12px;color:var(--muted)">Variant ${i+1}</div>
+          <div style="white-space:pre-wrap;">${escapeHtml(cmt)}</div>
+          <div><button class="copy-btn" data-text="${encodeURIComponent(cmt)}">Copy</button></div>
+        </div>`;
+
+        if (i === 1 && data.referralLink) {
+          // append soft link block
+          html = html.replace('</div></div>', `<div style="font-size:13px;color:var(--muted);margin-top:6px">Info lengkap di sini: <a href="${data.referralLink}" target="_blank" style="color:var(--accent-blue);text-decoration:underline">${data.referralLink}</a></div></div></div>`);
         }
 
-        const data = await resp.json();
+        const wrapper = document.createElement('div');
+        wrapper.className = 'output-block';
+        wrapper.innerHTML = html;
+        commentList.appendChild(wrapper);
+      });
 
-        // render comments: append referral link only to variant 2 (index 1)
-        commentEl.innerHTML = "";
-        data.commentVariants.forEach((cmt, i) => {
-          let html = `<div class="p-3 rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.03)]">
-                        <div class="text-xs" style="color:var(--muted);margin-bottom:6px">Variant ${i+1}</div>
-                        <div style="white-space:pre-wrap;color:#eaf0ff">${cmt}</div>
-                        <div class="mt-2"><button class="copy-btn px-3 py-1 rounded border" data-text="${encodeURIComponent(cmt)}" style="background:transparent;color:var(--muted)">Copy</button></div>
-                      </div>`;
+      // Captions
+      captionList.innerHTML = "";
+      data.captionVariants.forEach((cap, i)=>{
+        const wrapper = document.createElement('div');
+        wrapper.className = 'output-block';
+        const html = `<div style="font-size:12px;color:var(--muted)">Variant ${i+1}</div>
+          <div style="white-space:pre-wrap;margin-top:6px">${escapeHtml(cap)}</div>
+          <div style="margin-top:8px"><button class="copy-btn" data-text="${encodeURIComponent(cap)}">Copy Caption</button></div>`;
+        wrapper.innerHTML = html;
+        captionList.appendChild(wrapper);
+      });
 
-          if (i === 1 && data.referralLink) {
-            const linkHtml = `<div class="mt-2 text-xs" style="color:var(--muted)">Info lengkap di sini: <a href="${data.referralLink}" target="_blank" rel="noopener" style="color:var(--accent)">${data.referralLink}</a></div>`;
-            html = html.replace('</div></div>', linkHtml + '</div></div>');
-          }
+      // Hashtags and meta advice
+      hashtagsBox.innerText = (data.hashtags || []).join(' ');
+      metaAdvice.innerText = data.metaAdvice || '';
 
-          commentEl.innerHTML += html;
-        });
+      // Attach copy handlers
+      document.querySelectorAll('.copy-btn').forEach(btn=>{
+        btn.onclick = ()=>{
+          const txt = decodeURIComponent(btn.getAttribute('data-text'));
+          navigator.clipboard.writeText(txt).then(()=> alert('Teks di-copy ✅'));
+        };
+      });
 
-        // render captions (no link)
-        captionEl.innerHTML = "";
-        data.captionVariants.forEach((cap, i) => {
-          captionEl.innerHTML += `<div class="p-3 rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.03)]">
-                                    <div class="text-xs" style="color:var(--muted);margin-bottom:6px">Variant ${i+1}</div>
-                                    <div style="white-space:pre-wrap;color:#eaf0ff">${cap}</div>
-                                    <div class="mt-2"><button class="copy-btn px-3 py-1 rounded border" data-text="${encodeURIComponent(cap)}" style="background:transparent;color:var(--muted)">Copy</button></div>
-                                  </div>`;
-        });
+      outputArea.style.display = 'block';
+      window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
 
-        // hashtags & advice
-        hashtagsEl.innerText = data.hashtags.join(' ');
-        metaAdviceEl.innerText = data.metaAdvice || '';
-
-        // attach copy handlers
-        document.querySelectorAll('.copy-btn').forEach(btn=>{
-          btn.addEventListener('click', ()=>{
-            const t = decodeURIComponent(btn.getAttribute('data-text'));
-            navigator.clipboard.writeText(t).then(()=> {
-              alert('Teks di-copy ✅');
-            });
-          });
-        });
-
-        outputCard.style.display = 'block';
-        window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
-
-      } catch (err) {
-        console.error(err);
-        alert('Gagal generate: ' + (err.message || err));
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "Generate Narasi AI";
-      }
+    } catch (err) {
+      console.error(err);
+      alert('Gagal: ' + (err.message || err));
+    } finally {
+      generateBtn.disabled = false; generateBtn.innerText = "Generate Narasi AI 🚀";
     }
-  </script>
+  });
 
+  // basic HTML escape to avoid injection in innerHTML (we use escapeHtml when inserting)
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'",'&#039;')
+      .replaceAll('\n','\n');
+  }
+</script>
 </body>
 </html>
