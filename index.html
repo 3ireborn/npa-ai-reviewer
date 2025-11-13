@@ -2,150 +2,179 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NPA AI Reviewer - Powered by NPA Smart System</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NPA AI Reviewer</title>
 
-  <!-- ✅ Tambahkan favicon logo biru NPA -->
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 
-<body class="bg-gradient-to-br from-blue-50 to-white min-h-screen p-6">
+<body class="bg-slate-100">
+  <div class="max-w-xl mx-auto p-4">
 
-  <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-6 border border-blue-100">
-    
-    <!-- ✅ Logo di bagian atas -->
-    <div class="flex justify-center mb-3">
-      <img src="favicon.png" alt="Logo NPA" class="h-16 w-16 rounded-full shadow-md" />
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <img src="favicon.png" class="w-16 mx-auto mb-2" />
+      <h1 class="text-2xl font-bold text-slate-800">NPA AI Reviewer</h1>
+      <p class="text-sm text-slate-500">Upload gambar, lalu biarkan AI bantu kamu 🙌</p>
     </div>
 
-    <h1 class="text-3xl font-bold text-center text-blue-700 mb-2">🤖 NPA AI Reviewer</h1>
-    <p class="text-center text-slate-600 mb-6">
-      Upload gambar produk, lalu biarkan AI bantu buat komentar & caption <strong>Meta-friendly</strong> ✨
-    </p>
-
-    <!-- Upload Section -->
-    <div class="border-2 border-dashed border-blue-300 rounded-xl p-6 text-center bg-blue-50">
-      <input id="imageInput" type="file" accept="image/*" class="hidden" onchange="previewImage(event)" />
-      <label for="imageInput" class="cursor-pointer text-blue-600 font-medium hover:underline">
-        Klik di sini untuk upload gambar
-      </label>
-      <div id="preview" class="mt-4 flex justify-center"></div>
+    <!-- Upload -->
+    <label class="block mb-2 text-sm font-medium text-slate-700">Upload Gambar</label>
+    <div class="border border-dashed rounded-xl p-4 bg-white">
+      <input type="file" accept="image/*" onchange="previewImage(event)" />
+      <div id="preview" class="mt-3"></div>
     </div>
 
-    <!-- Form Section -->
-    <div class="mt-6 grid md:grid-cols-2 gap-4">
-      <div>
-        <label class="block text-sm font-medium text-slate-700">Nama Produk / Orang</label>
-        <input id="name" type="text" placeholder="Contoh: Kopi Harum Nusantara"
-          class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
-      </div>
+    <!-- Form -->
+    <div class="mt-5">
+      <label class="text-sm font-medium">Nama Produk / Orang</label>
+      <input id="name" class="w-full p-2 border rounded-lg mt-1" placeholder="Isi nama konten..." />
 
-      <div>
-        <label class="block text-sm font-medium text-slate-700">Tipe Konten</label>
-        <select id="type" class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
-          <option>UMKM</option>
-          <option>Personal Brand</option>
-          <option>Motivasi</option>
-          <option>Edukasi</option>
-          <option>Testimoni</option>
-        </select>
-      </div>
+      <label class="text-sm font-medium mt-4 block">Tipe Konten</label>
+      <select id="type" class="w-full p-2 border rounded-lg mt-1">
+        <option>Motivasi</option>
+        <option>UMKM</option>
+        <option>Personal</option>
+        <option>Campuran</option>
+      </select>
 
-      <div>
-        <label class="block text-sm font-medium text-slate-700">Gaya Narasi</label>
-        <select id="tone" class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
-          <option>Santai</option>
-          <option>Inspiratif</option>
-          <option>Edukasi</option>
-          <option>Profesional</option>
-          <option>Lucu</option>
-        </select>
-      </div>
+      <label class="text-sm font-medium mt-4 block">Gaya Narasi</label>
+      <select id="tone" class="w-full p-2 border rounded-lg mt-1">
+        <option>Santai</option>
+        <option>Inspiratif</option>
+        <option>Profesional</option>
+        <option>Friendly</option>
+      </select>
 
-      <div>
-        <label class="block text-sm font-medium text-slate-700">Link Referral (opsional)</label>
-        <input id="referral" type="text" placeholder="https://"
-          class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400">
-      </div>
-    </div>
+      <label class="text-sm font-medium mt-4 block">Link Referral (opsional)</label>
+      <input id="referral" class="w-full p-2 border rounded-lg mt-1" placeholder="https://linkmu.com" />
 
-    <!-- Generate Button -->
-    <div class="mt-6 text-center">
-      <button onclick="generateText()" id="generateBtn"
-        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">
+      <button id="generateBtn" onclick="generateText()"
+        class="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 font-semibold hover:bg-blue-700">
         Generate Narasi AI
       </button>
     </div>
 
-    <!-- Output -->
-    <div id="output" class="mt-6 hidden">
-      <h2 class="text-lg font-semibold mb-2 text-blue-700">🎉 Hasil Generasi AI</h2>
+    <!-- OUTPUT -->
+    <div id="output" class="mt-8 hidden">
+      <h2 class="text-xl font-bold mb-3 text-slate-700">🎉 Hasil Generasi AI</h2>
 
-      <div class="bg-slate-50 p-4 rounded-lg mb-4 border border-blue-100">
-        <h3 class="text-sm text-slate-500">Komentar Meta-Friendly:</h3>
-        <p id="comment" class="mt-2 text-slate-800"></p>
-      </div>
+      <!-- Komentar -->
+      <h3 class="font-semibold text-slate-700 mt-4">Komentar Meta-Friendly:</h3>
+      <div id="comment"></div>
 
-      <div class="bg-slate-50 p-4 rounded-lg mb-4 border border-blue-100">
-        <h3 class="text-sm text-slate-500">Caption:</h3>
-        <p id="caption" class="mt-2 text-slate-800"></p>
-      </div>
+      <!-- Caption -->
+      <h3 class="font-semibold text-slate-700 mt-6">Caption:</h3>
+      <div id="caption"></div>
 
-      <div class="bg-slate-50 p-4 rounded-lg border border-blue-100">
-        <h3 class="text-sm text-slate-500">Hashtag:</h3>
-        <p id="hashtags" class="mt-2 text-slate-800"></p>
-      </div>
+      <!-- Hashtags -->
+      <h3 class="font-semibold text-slate-700 mt-6">Hashtag:</h3>
+      <div id="hashtags" class="mt-2"></div>
+
+      <!-- Meta advice -->
+      <div id="metaAdvice" class="text-xs text-slate-500 mt-4"></div>
     </div>
 
-    <p class="text-center text-xs text-slate-400 mt-8">
-      Powered by <span class="text-blue-600 font-semibold">NPA Smart System</span> © 2025
+    <p class="text-center text-xs text-slate-500 mt-10">
+      Powered by <b>NPA Smart System</b> © 2025
     </p>
   </div>
 
+  <!-- ================================================================= -->
+  <!-- SCRIPT BARU -->
+  <!-- ================================================================= -->
   <script>
-    let previewImage = (event) => {
+    const previewEl = document.getElementById('preview');
+    const outputEl = document.getElementById('output');
+    const commentEl = document.getElementById('comment');
+    const captionEl = document.getElementById('caption');
+    const hashtagsEl = document.getElementById('hashtags');
+    const generateBtn = document.getElementById('generateBtn');
+
+    let currentImageBase64 = null;
+
+    function previewImage(event) {
       const reader = new FileReader();
       reader.onload = function () {
-        const output = document.getElementById('preview');
-        output.innerHTML = `<img src='${reader.result}' class='h-48 rounded-xl shadow'/>`;
+        currentImageBase64 = reader.result.split(',')[1];
+        previewEl.innerHTML = `<img src="${reader.result}" class="rounded-xl shadow mt-2" />`;
       };
       reader.readAsDataURL(event.target.files[0]);
-    };
+    }
 
     async function generateText() {
-      const name = document.getElementById('name').value.trim() || "Produk Hebat";
-      const tone = document.getElementById('tone').value;
+      const name = document.getElementById('name').value.trim();
       const type = document.getElementById('type').value;
+      const tone = document.getElementById('tone').value;
       const referral = document.getElementById('referral').value.trim();
 
-      const btn = document.getElementById('generateBtn');
-      btn.disabled = true;
-      btn.innerText = "Sedang memproses...";
+      generateBtn.disabled = true;
+      generateBtn.innerText = "Memproses...";
 
-      await new Promise(r => setTimeout(r, 1200));
+      try {
+        const resp = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: currentImageBase64,
+            name,
+            type,
+            tone,
+            referral
+          })
+        });
 
-      const comment = `${name} — keren banget prosesnya! 😍 
-Nggak cuma ${type.toLowerCase()}, tapi juga cerita perjuangan.
-Terus konsisten ya 💪
-Aku taruh info lengkapnya di sini 👇
-${referral || "(link)"}`;
+        const data = await resp.json();
 
-      const caption = `Bangkit bareng proses, bukan pamer hasil 💫 
-#BangkitBersama #RuangNpaSmartSystem`;
+        // ================= KOMENTAR ==================
+        commentEl.innerHTML = "";
+        data.commentVariants.forEach((cmt, i) => {
+          commentEl.innerHTML += `
+            <div class="mt-3 p-3 bg-white rounded border">
+              <div class="text-xs text-slate-500 mb-1">Variant ${i+1}</div>
+              ${cmt.replace(/\n/g, "<br>")}
+              <button class="mt-2 px-2 py-1 text-sm border rounded copy-btn"
+                data-text="${encodeURIComponent(cmt)}">Copy</button>
+            </div>
+          `;
+        });
 
-      const hashtags = "#KontenLebihUtama #SmartCreator2025 #UMKMBerproses";
+        // ================= CAPTION ==================
+        captionEl.innerHTML = "";
+        data.captionVariants.forEach((cap, i) => {
+          captionEl.innerHTML += `
+            <div class="mt-3 p-3 bg-white rounded border">
+              <div class="text-xs text-slate-500 mb-1">Variant ${i+1}</div>
+              ${cap.replace(/\n/g, "<br>")}
+              <button class="mt-2 px-2 py-1 text-sm border rounded copy-btn"
+                data-text="${encodeURIComponent(cap)}">Copy</button>
+            </div>
+          `;
+        });
 
-      document.getElementById('comment').innerText = comment;
-      document.getElementById('caption').innerText = caption;
-      document.getElementById('hashtags').innerText = hashtags;
+        // ================= HASHTAG ==================
+        hashtagsEl.innerHTML = `
+          <div class="p-3 bg-white rounded border">${data.hashtags.join(" ")}</div>
+        `;
 
-      document.getElementById('output').classList.remove('hidden');
-      btn.disabled = false;
-      btn.innerText = "Generate Narasi AI";
+        document.querySelectorAll(".copy-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            navigator.clipboard.writeText(decodeURIComponent(btn.dataset.text));
+            alert("Berhasil dicopy ✨");
+          });
+        });
+
+        outputEl.classList.remove("hidden");
+
+      } catch (err) {
+        alert("Terjadi kesalahan: " + err.message);
+      }
+
+      generateBtn.disabled = false;
+      generateBtn.innerText = "Generate Narasi AI";
     }
   </script>
 </body>
