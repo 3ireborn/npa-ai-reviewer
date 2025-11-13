@@ -1,181 +1,293 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NPA AI Reviewer</title>
-
-  <!-- Tailwind CSS CDN -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NPA AI Reviewer — Dark Elegant</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <style>
+    :root{
+      --bg:#0f1720;
+      --card:#111827;
+      --muted:#94a3b8;
+      --accent:#A78BFA; /* ungu premium */
+      --glass: rgba(255,255,255,0.03);
+    }
+    html,body{height:100%}
+    body{
+      background: linear-gradient(180deg,var(--bg), #07101a);
+      color: #e6eef8;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    /* small scrollbar styling */
+    ::-webkit-scrollbar{height:10px;width:8px}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:10px}
+  </style>
 </head>
+<body class="min-h-screen flex items-start justify-center py-10 px-4">
 
-<body class="bg-slate-100">
-  <div class="max-w-xl mx-auto p-4">
+  <div class="w-full max-w-2xl">
+    <!-- Card -->
+    <div class="bg-[var(--card)] rounded-2xl shadow-2xl border border-[rgba(255,255,255,0.04)] p-6">
+      <!-- Header -->
+      <div class="flex items-center gap-4 mb-4">
+        <img src="favicon.png" class="h-12 w-12 rounded-full shadow" alt="NPA logo"/>
+        <div>
+          <h1 class="text-2xl font-semibold" style="color: #f8f9ff;">NPA AI Reviewer</h1>
+          <div class="text-sm" style="color:var(--muted)">Dark Elegant · Auto caption (HOOK → MASALAH → SOLUSI → CTA)</div>
+        </div>
+      </div>
 
-    <!-- Header -->
-    <div class="text-center mb-6">
-      <img src="favicon.png" class="w-16 mx-auto mb-2" />
-      <h1 class="text-2xl font-bold text-slate-800">NPA AI Reviewer</h1>
-      <p class="text-sm text-slate-500">Upload gambar, lalu biarkan AI bantu kamu 🙌</p>
+      <!-- Upload -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="md:col-span-2">
+          <label class="text-xs text-[var(--muted)]">Nama Produk / Judul</label>
+          <input id="name" placeholder="Judul atau nama (boleh kosong)" class="mt-2 w-full p-3 rounded-lg bg-[var(--glass)] border border-[rgba(255,255,255,0.03)] outline-none text-white" />
+        </div>
+
+        <div class="md:col-span-1">
+          <label class="text-xs text-[var(--muted)]">Preset Nama</label>
+          <select id="preset" class="mt-2 w-full p-3 rounded-lg bg-[var(--glass)] border border-[rgba(255,255,255,0.03)] text-white">
+            <option value="">— Pilih Preset (opsional) —</option>
+            <option>Motivasi Pagi</option>
+            <option>Semangat Bangkit</option>
+            <option>Ngopi Bareng</option>
+            <option>UMKM Lokal</option>
+            <option>Perjalanan Hidup</option>
+            <option>Edukasi Ringan</option>
+            <option>Sharing Insight</option>
+            <option>Proses Berkarya</option>
+            <option>Tips Produktif</option>
+            <option>Konten Harian</option>
+            <option value="__custom__">— Custom —</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Custom input always visible (sync with preset) -->
+      <div class="mt-4">
+        <label class="text-xs text-[var(--muted)]">Nama / Keterangan (editable)</label>
+        <input id="nameManual" placeholder="Contoh: Ngopi bareng sama PakD" class="mt-2 w-full p-3 rounded-lg bg-[var(--glass)] border border-[rgba(255,255,255,0.03)] outline-none text-white" />
+      </div>
+
+      <!-- options row -->
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs text-[var(--muted)]">Tipe Konten</label>
+          <select id="type" class="mt-2 w-full p-3 rounded-lg bg-[var(--glass)] border border-[rgba(255,255,255,0.03)] text-white">
+            <option>Campuran</option>
+            <option>Motivasi</option>
+            <option>UMKM</option>
+            <option>Personal</option>
+            <option>Review Produk</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-[var(--muted)]">Gaya Narasi</label>
+          <select id="tone" class="mt-2 w-full p-3 rounded-lg bg-[var(--glass)] border border-[rgba(255,255,255,0.03)] text-white">
+            <option>Inspiratif</option>
+            <option>Santai</option>
+            <option>Profesional</option>
+            <option>Friendly</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-[var(--muted)]">Link Referral (opsional)</label>
+          <input id="referral" placeholder="s.id/..." class="mt-2 w-full p-3 rounded-lg bg-[var(--glass)] border border-[rgba(255,255,255,0.03)] text-white" />
+        </div>
+      </div>
+
+      <!-- image upload -->
+      <div class="mt-4">
+        <label class="text-xs text-[var(--muted)]">Upload Gambar</label>
+        <div class="mt-2 p-4 rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.03)]">
+          <input id="imageInput" type="file" accept="image/*" onchange="previewImage(event)" class="text-sm text-[var(--muted)]" />
+          <div id="preview" class="mt-3"></div>
+        </div>
+      </div>
+
+      <!-- button -->
+      <div class="mt-6 flex items-center gap-3">
+        <button id="generateBtn" onclick="generateText()" class="px-6 py-3 rounded-lg bg-[var(--accent)] hover:brightness-110 text-black font-semibold shadow">Generate Narasi AI</button>
+        <button onclick="resetForm()" class="px-4 py-2 rounded-lg border border-[rgba(255,255,255,0.04)] text-[var(--muted)]">Reset</button>
+        <div class="ml-auto text-xs text-[var(--muted)]">Powered by <b style="color:var(--accent)">NPA Smart System</b></div>
+      </div>
     </div>
 
-    <!-- Upload -->
-    <label class="block mb-2 text-sm font-medium text-slate-700">Upload Gambar</label>
-    <div class="border border-dashed rounded-xl p-4 bg-white">
-      <input type="file" accept="image/*" onchange="previewImage(event)" />
-      <div id="preview" class="mt-3"></div>
+    <!-- Output card -->
+    <div id="outputCard" class="mt-6 bg-[var(--card)] rounded-xl p-5 border border-[rgba(255,255,255,0.03)] hidden">
+      <h2 class="text-lg font-semibold mb-2">🎯 Hasil Generasi</h2>
+
+      <div class="grid gap-4">
+        <div>
+          <div class="text-xs text-[var(--muted)] mb-2">Komentar (varian)</div>
+          <div id="comment" class="space-y-3"></div>
+        </div>
+
+        <div>
+          <div class="text-xs text-[var(--muted)] mb-2">Caption (varian)</div>
+          <div id="caption" class="space-y-3"></div>
+        </div>
+
+        <div>
+          <div class="text-xs text-[var(--muted)] mb-2">Hashtags</div>
+          <div id="hashtags" class="p-3 rounded bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.03)]" style="color:var(--muted)"></div>
+        </div>
+
+        <div>
+          <div id="metaAdvice" class="text-xs text-[var(--muted)]"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- Form -->
-    <div class="mt-5">
-      <label class="text-sm font-medium">Nama Produk / Orang</label>
-      <input id="name" class="w-full p-2 border rounded-lg mt-1" placeholder="Isi nama konten..." />
-
-      <label class="text-sm font-medium mt-4 block">Tipe Konten</label>
-      <select id="type" class="w-full p-2 border rounded-lg mt-1">
-        <option>Motivasi</option>
-        <option>UMKM</option>
-        <option>Personal</option>
-        <option>Campuran</option>
-      </select>
-
-      <label class="text-sm font-medium mt-4 block">Gaya Narasi</label>
-      <select id="tone" class="w-full p-2 border rounded-lg mt-1">
-        <option>Santai</option>
-        <option>Inspiratif</option>
-        <option>Profesional</option>
-        <option>Friendly</option>
-      </select>
-
-      <label class="text-sm font-medium mt-4 block">Link Referral (opsional)</label>
-      <input id="referral" class="w-full p-2 border rounded-lg mt-1" placeholder="https://linkmu.com" />
-
-      <button id="generateBtn" onclick="generateText()"
-        class="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 font-semibold hover:bg-blue-700">
-        Generate Narasi AI
-      </button>
-    </div>
-
-    <!-- OUTPUT -->
-    <div id="output" class="mt-8 hidden">
-      <h2 class="text-xl font-bold mb-3 text-slate-700">🎉 Hasil Generasi AI</h2>
-
-      <!-- Komentar -->
-      <h3 class="font-semibold text-slate-700 mt-4">Komentar Meta-Friendly:</h3>
-      <div id="comment"></div>
-
-      <!-- Caption -->
-      <h3 class="font-semibold text-slate-700 mt-6">Caption:</h3>
-      <div id="caption"></div>
-
-      <!-- Hashtags -->
-      <h3 class="font-semibold text-slate-700 mt-6">Hashtag:</h3>
-      <div id="hashtags" class="mt-2"></div>
-
-      <!-- Meta advice -->
-      <div id="metaAdvice" class="text-xs text-slate-500 mt-4"></div>
-    </div>
-
-    <p class="text-center text-xs text-slate-500 mt-10">
-      Powered by <b>NPA Smart System</b> © 2025
-    </p>
   </div>
 
-  <!-- ================================================================= -->
-  <!-- SCRIPT BARU -->
-  <!-- ================================================================= -->
+  <!-- SCRIPT -->
   <script>
-    const previewEl = document.getElementById('preview');
-    const outputEl = document.getElementById('output');
+    // UI bindings
+    const preset = document.getElementById('preset');
+    const nameManual = document.getElementById('nameManual');
+    const nameMain = document.getElementById('name');
+    const preview = document.getElementById('preview');
+    const outputCard = document.getElementById('outputCard');
     const commentEl = document.getElementById('comment');
     const captionEl = document.getElementById('caption');
     const hashtagsEl = document.getElementById('hashtags');
-    const generateBtn = document.getElementById('generateBtn');
+    const metaAdviceEl = document.getElementById('metaAdvice');
 
+    // sync preset -> nameManual and nameMain
+    preset.addEventListener('change', () => {
+      const v = preset.value;
+      if (v === "__custom__") {
+        nameManual.value = "";
+        nameMain.value = "";
+        nameManual.focus();
+      } else {
+        nameManual.value = v;
+        nameMain.value = v;
+      }
+    });
+
+    // also allow manual editing to reflect in main name
+    nameManual.addEventListener('input', () => {
+      nameMain.value = nameManual.value;
+    });
+
+    // image preview
     let currentImageBase64 = null;
-
     function previewImage(event) {
+      const f = event.target.files?.[0];
+      if (!f) return;
       const reader = new FileReader();
-      reader.onload = function () {
+      reader.onload = () => {
+        preview.innerHTML = `<img src="${reader.result}" class="rounded-lg max-h-48 object-contain" />`;
         currentImageBase64 = reader.result.split(',')[1];
-        previewEl.innerHTML = `<img src="${reader.result}" class="rounded-xl shadow mt-2" />`;
       };
-      reader.readAsDataURL(event.target.files[0]);
+      reader.readAsDataURL(f);
     }
 
+    function resetForm() {
+      preset.value = "";
+      nameManual.value = "";
+      nameMain.value = "";
+      document.getElementById('type').value = "Campuran";
+      document.getElementById('tone').value = "Inspiratif";
+      document.getElementById('referral').value = "";
+      document.getElementById('imageInput').value = "";
+      preview.innerHTML = "";
+      outputCard.classList.add('hidden');
+      commentEl.innerHTML = "";
+      captionEl.innerHTML = "";
+      hashtagsEl.innerHTML = "";
+      metaAdviceEl.innerText = "";
+    }
+
+    // generate - call backend
     async function generateText() {
-      const name = document.getElementById('name').value.trim();
-      const type = document.getElementById('type').value;
-      const tone = document.getElementById('tone').value;
+      const name = nameMain.value.trim() || nameManual.value.trim() || "Konten Kamu";
+      const type = document.getElementById('type').value || "Campuran";
+      const tone = document.getElementById('tone').value || "Inspiratif";
       const referral = document.getElementById('referral').value.trim();
 
-      generateBtn.disabled = true;
-      generateBtn.innerText = "Memproses...";
+      const btn = document.getElementById('generateBtn');
+      btn.disabled = true;
+      btn.innerText = "Memproses...";
 
       try {
         const resp = await fetch('/api/generate', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {'Content-Type':'application/json'},
           body: JSON.stringify({
             imageBase64: currentImageBase64,
-            name,
-            type,
-            tone,
-            referral
+            name, type, tone, referral
           })
         });
 
+        if (!resp.ok) {
+          const txt = await resp.text();
+          throw new Error(txt || 'Server error');
+        }
+
         const data = await resp.json();
 
-        // ================= KOMENTAR ==================
+        // render comments (we will put referral only in comment variant 2)
         commentEl.innerHTML = "";
         data.commentVariants.forEach((cmt, i) => {
-          commentEl.innerHTML += `
-            <div class="mt-3 p-3 bg-white rounded border">
-              <div class="text-xs text-slate-500 mb-1">Variant ${i+1}</div>
-              ${cmt.replace(/\n/g, "<br>")}
-              <button class="mt-2 px-2 py-1 text-sm border rounded copy-btn"
-                data-text="${encodeURIComponent(cmt)}">Copy</button>
-            </div>
-          `;
+          let html = `<div class="p-3 rounded-lg bg-[var(--glass)] border border-[rgba(255,255,255,0.03)]">
+                        <div class="text-xs text-[var(--muted)] mb-1">Variant ${i+1}</div>
+                        <div style="white-space:pre-wrap;color:#eaf0ff">${cmt}</div>
+                        <div class="mt-2"><button class="copy-btn px-3 py-1 rounded border" data-text="${encodeURIComponent(cmt)}" style="background:transparent;color:var(--muted)">Copy</button></div>
+                      </div>`;
+
+          // if referral exists, append soft link to variant 2 (index 1)
+          if (i === 1 && data.referralLink) {
+            const linkHtml = `<div class="mt-2 text-xs" style="color:var(--muted)">Info lengkap di sini: <a href="${data.referralLink}" target="_blank" rel="noopener" style="color:var(--accent)">${data.referralLink}</a></div>`;
+            html = html.replace('</div></div>', linkHtml + '</div></div>');
+          }
+
+          commentEl.innerHTML += html;
         });
 
-        // ================= CAPTION ==================
+        // render captions (no direct link)
         captionEl.innerHTML = "";
         data.captionVariants.forEach((cap, i) => {
-          captionEl.innerHTML += `
-            <div class="mt-3 p-3 bg-white rounded border">
-              <div class="text-xs text-slate-500 mb-1">Variant ${i+1}</div>
-              ${cap.replace(/\n/g, "<br>")}
-              <button class="mt-2 px-2 py-1 text-sm border rounded copy-btn"
-                data-text="${encodeURIComponent(cap)}">Copy</button>
-            </div>
-          `;
+          captionEl.innerHTML += `<div class="p-3 rounded-lg bg-[var(--glass)] border border-[rgba(255,255,255,0.03)]">
+                                    <div class="text-xs text-[var(--muted)] mb-1">Variant ${i+1}</div>
+                                    <div style="white-space:pre-wrap;color:#eaf0ff">${cap}</div>
+                                    <div class="mt-2"><button class="copy-btn px-3 py-1 rounded border" data-text="${encodeURIComponent(cap)}" style="background:transparent;color:var(--muted)">Copy</button></div>
+                                  </div>`;
         });
 
-        // ================= HASHTAG ==================
-        hashtagsEl.innerHTML = `
-          <div class="p-3 bg-white rounded border">${data.hashtags.join(" ")}</div>
-        `;
+        // hashtags
+        hashtagsEl.innerText = data.hashtags.join(' ');
 
-        document.querySelectorAll(".copy-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            navigator.clipboard.writeText(decodeURIComponent(btn.dataset.text));
-            alert("Berhasil dicopy ✨");
+        // meta advice
+        metaAdviceEl.innerText = data.metaAdvice || '';
+
+        // attach copy handlers
+        document.querySelectorAll('.copy-btn').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            const t = decodeURIComponent(btn.getAttribute('data-text'));
+            navigator.clipboard.writeText(t).then(()=> {
+              alert('Teks di-copy ✅');
+            });
           });
         });
 
-        outputEl.classList.remove("hidden");
+        outputCard.classList.remove('hidden');
+        window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
 
       } catch (err) {
-        alert("Terjadi kesalahan: " + err.message);
+        console.error(err);
+        alert('Gagal generate: ' + (err.message || err));
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Generate Narasi AI";
       }
-
-      generateBtn.disabled = false;
-      generateBtn.innerText = "Generate Narasi AI";
     }
   </script>
+
 </body>
 </html>
