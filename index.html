@@ -1,305 +1,305 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NPA AI Reviewer — Dark Elegant (Final)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NPA AI Reviewer</title>
 
-<style>
-  :root{
-    --bg:#0d0f14;          /* dark elegant */
-    --panel:#fff2c7;       /* soft yellow panel */
-    --panel-text:#07101a;  /* dark text inside panel */
-    --muted:#9aa4b3;
-    --accent:#3b82f6;      /* button accent */
-    --shadow: rgba(0,0,0,0.45);
-  }
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;}
-  body{background:var(--bg);color:#eaf0ff;display:flex;align-items:center;justify-content:center;padding:28px;}
-
-  .container{width:100%;max-width:720px;}
-  .header{display:flex;gap:12px;align-items:center;margin-bottom:14px}
-  .logo {width:48px;height:48px;border-radius:10px;background:linear-gradient(90deg,#3b82f6,#A78BFA);display:flex;align-items:center;justify-content:center}
-  .logo img{width:34px;height:34px;border-radius:6px}
-  h1{margin:0;font-size:20px}
-  .subtitle{color:var(--muted);font-size:13px;margin-top:2px}
-
-  /* panel */
-  .panel {
-    background: var(--panel);
-    color: var(--panel-text);
-    border-radius:16px;
-    padding:18px;
-    box-shadow: 0 18px 50px var(--shadow);
-    border: 1px solid rgba(0,0,0,0.12); /* thin outer stroke */
-  }
-
-  label{display:block;font-size:13px;margin-bottom:6px;color:var(--panel-text)}
-  .field, select {width:100%;padding:10px 12px;border-radius:10px;border:1px solid #000;box-sizing:border-box;background:#fff}
-  .file-input {padding:8px 4px;border-radius:8px;background:transparent;border:none}
-  .upload-preview img{max-height:140px;border-radius:8px;display:block;margin-top:8px;box-shadow:0 8px 28px rgba(0,0,0,0.25)}
-
-  .row{display:grid;grid-template-columns:1fr 280px;gap:12px}
-  @media (max-width:720px){ .row{grid-template-columns:1fr} }
-
-  .actions{display:flex;gap:10px;align-items:center;margin-top:12px}
-  .btn {background:var(--accent);color:#07101a;padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,0.12)}
-  .btn:disabled{opacity:0.6;cursor:not-allowed}
-  .btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--panel-text);padding:9px 12px;border-radius:10px}
-
-  /* output */
-  .output-wrap{margin-top:18px;display:none}
-  .out-block{background:#0f1620;border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.03);color:#eef6ff;box-shadow:0 8px 28px rgba(0,0,0,0.6)}
-  .out-title{color:var(--muted);font-size:13px;margin-bottom:8px}
-  .variant {margin-top:10px;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02)}
-  .copy-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer}
-  .copy-all{margin-left:auto;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer}
-
-  .meta-note{color:var(--muted);font-size:12px;margin-top:8px}
-</style>
+  <!-- Link ke style.css -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="logo"><img src="favicon.png" alt="logo"/></div>
-      <div>
-        <h1>NPA AI Reviewer</h1>
-        <div class="subtitle">Dark Elegant • Story-Selling & Meta-Friendly • HOOK → MASALAH → SOLUSI → CTA</div>
-      </div>
-    </div>
+  <div class="wrap">
+    <div class="frame">
+      <div class="inner">
 
-    <div class="panel">
-      <!-- UPLOAD -->
-      <label>Upload Gambar (opsional)</label>
-      <div class="upload-wrap">
-        <input id="imageInput" class="file-input" type="file" accept="image/*" />
-        <div class="upload-preview" id="preview"></div>
-        <div class="meta-note">Gambar membantu AI memahami konteks — rekomendasi untuk hasil lebih relevan.</div>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <!-- FORM -->
-      <div class="row">
-        <div>
-          <label>Nama Produk / Judul</label>
-          <input id="name" class="field" placeholder="Contoh: Semangat Bangkit" />
+        <!-- HEADER -->
+        <div class="header">
+          <div class="logo">NPA</div>
+          <div class="title">
+            <h1>NPA AI Reviewer</h1>
+            <div class="subtitle">Generate Caption · Komentar · Meta-Friendly</div>
+          </div>
         </div>
 
-        <div>
-          <label>Preset Nama</label>
-          <select id="preset" class="field">
-            <option value="">— Pilih Preset (opsional) —</option>
-            <option>Motivasi Pagi</option>
-            <option>Semangat Bangkit</option>
-            <option>Ngopi Bareng</option>
-            <option>UMKM Lokal</option>
-            <option>Perjalanan Hidup</option>
-            <option>Edukasi Ringan</option>
-            <option>Sharing Insight</option>
-            <option>Proses Berkarya</option>
-            <option>Tips Produktif</option>
-            <option>Konten Harian</option>
-            <option value="__custom__">— Custom —</option>
-          </select>
+        <!------------ MAIN GRID ------------->
+        <div class="grid">
+
+          <!-- LEFT: FORM PANEL -->
+          <div class="panel">
+
+            <!-- Upload -->
+            <label>Upload Gambar (opsional)</label>
+            <input id="imageInput" type="file" accept="image/*" />
+            <div id="preview" class="preview"></div>
+
+            <!-- Nama produk -->
+            <label>Nama Produk / Judul</label>
+            <input id="name" type="text" placeholder="Contoh: Semangat Bangkit" />
+
+            <!-- Preset -->
+            <label>Preset Tema</label>
+            <select id="preset">
+              <option value="">— Pilih Preset —</option>
+              <option>Story-Selling UMKM</option>
+              <option>Motivasi Harian</option>
+              <option>Bisnis & Income</option>
+              <option>Islami / Spiritual</option>
+              <option>Parenting / Keluarga</option>
+              <option>Edukasi / Tips</option>
+              <option>Perjalanan Hidup</option>
+              <option>Konten Harian</option>
+              <option>Soft Selling</option>
+              <option>Personal Branding</option>
+            </select>
+
+            <!-- Manual name -->
+            <label>Nama Manual (opsional)</label>
+            <input id="nameManual" type="text" placeholder="Sesuaikan sendiri" />
+
+            <!-- Type & tone -->
+            <div class="grid-2">
+              <div>
+                <label>Tipe Konten</label>
+                <select id="type">
+                  <option>Campuran</option>
+                  <option>Motivasi</option>
+                  <option>UMKM</option>
+                  <option>Personal</option>
+                  <option>Review Produk</option>
+                </select>
+              </div>
+              <div>
+                <label>Gaya Narasi</label>
+                <select id="tone">
+                  <option>Inspiratif</option>
+                  <option>Santai</option>
+                  <option>Profesional</option>
+                  <option>Friendly</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Referral -->
+            <label>Link Referral (opsional)</label>
+            <input id="referral" type="text" placeholder="s.id/..." />
+
+            <div class="actions">
+              <button id="generateBtn" class="btn">Generate Narasi AI 🚀</button>
+              <button id="resetBtn" class="btn ghost">Reset</button>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: OUTPUT PANEL -->
+          <div>
+            <div class="results-wrap">
+              <div class="out-title">Hasil</div>
+
+              <div id="results">
+                <div class="placeholder">
+                  Klik "Generate Narasi AI" untuk melihat hasil (3 caption & 4 komentar).
+                </div>
+              </div>
+
+              <!-- result actions -->
+              <div class="result-actions">
+                <button id="copyAllComments" class="copy-btn small">Copy Semua Komentar</button>
+                <button id="copyAllCaptions" class="copy-btn small">Copy Semua Caption</button>
+                <button id="downloadJSON" class="copy-btn small">Download JSON</button>
+              </div>
+
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div style="height:12px"></div>
 
-      <label>Nama / Keterangan (editable)</label>
-      <input id="nameManual" class="field" placeholder="Contoh: Ngopi bareng sama PakD" />
-
-      <div style="height:10px"></div>
-
-      <div class="row">
-        <div>
-          <label>Tipe Konten</label>
-          <select id="type" class="field">
-            <option>Campuran</option>
-            <option>Motivasi</option>
-            <option>UMKM</option>
-            <option>Personal</option>
-            <option>Review Produk</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Gaya Narasi</label>
-          <select id="tone" class="field">
-            <option>Inspiratif</option>
-            <option>Santai</option>
-            <option>Profesional</option>
-            <option>Friendly</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <label>Link Referral (opsional)</label>
-      <input id="referral" class="field" placeholder="s.id/..." />
-
-      <div class="actions" style="margin-top:14px">
-        <button id="generateBtn" class="btn">Generate Narasi AI 🚀</button>
-        <button id="resetBtn" class="btn-ghost">Reset</button>
-        <div style="margin-left:auto" class="meta-note">Powered by NPA Smart System</div>
-      </div>
-
-      <!-- OUTPUT -->
-      <div class="output-wrap" id="outputWrap">
-        <div style="display:flex;align-items:center;gap:10px;margin-top:14px">
-          <div class="out-title">Hasil</div>
-          <button id="copyAllComments" class="copy-all" title="Copy semua komentar">Copy All Komentar</button>
-          <button id="copyAllCaptions" class="copy-all" title="Copy semua caption">Copy All Caption</button>
-        </div>
-
-        <div style="height:10px"></div>
-
-        <div class="out-block">
-          <div class="out-title">Komentar (pilih lalu paste ke komentar FB)</div>
-          <div id="commentList"></div>
-        </div>
-
-        <div style="height:12px"></div>
-
-        <div class="out-block">
-          <div class="out-title">Caption (varian)</div>
-          <div id="captionList"></div>
-        </div>
-
-        <div style="height:12px"></div>
-
-        <div class="out-block">
-          <div class="out-title">Hashtags & Tips</div>
-          <div id="hashtagsBox" style="margin-top:8px;color:var(--muted)"></div>
-          <div id="metaAdvice" class="meta-note" style="margin-top:8px"></div>
-        </div>
       </div>
     </div>
   </div>
 
+
+<!-- ================= SCRIPTS ================= -->
 <script>
-  // UI bindings
   const preset = document.getElementById('preset');
-  const nameManual = document.getElementById('nameManual');
   const nameMain = document.getElementById('name');
+  const nameManual = document.getElementById('nameManual');
   const imageInput = document.getElementById('imageInput');
   const preview = document.getElementById('preview');
+
+  const resultsDiv = document.getElementById('results');
   const generateBtn = document.getElementById('generateBtn');
   const resetBtn = document.getElementById('resetBtn');
 
-  const outputWrap = document.getElementById('outputWrap');
-  const commentList = document.getElementById('commentList');
-  const captionList = document.getElementById('captionList');
-  const hashtagsBox = document.getElementById('hashtagsBox');
-  const metaAdvice = document.getElementById('metaAdvice');
+  const copyAllCommentsBtn = document.getElementById('copyAllComments');
+  const copyAllCaptionsBtn = document.getElementById('copyAllCaptions');
+  const downloadJSONBtn = document.getElementById('downloadJSON');
 
-  // preset sync
-  preset.addEventListener('change', ()=>{
-    const v = preset.value;
-    if (v === "__custom__") { nameManual.value = ""; nameMain.value = ""; nameManual.focus(); }
-    else { nameManual.value = v; nameMain.value = v; }
-  });
-  nameManual.addEventListener('input', ()=> nameMain.value = nameManual.value);
-
-  // image preview
   let currentImageBase64 = null;
-  imageInput.addEventListener('change', (e)=>{
+
+  // Preview
+  imageInput.addEventListener('change', (e) => {
     const f = e.target.files?.[0];
-    if (!f) { preview.innerHTML=''; currentImageBase64=null; return; }
+    if (!f) { preview.innerHTML = ""; currentImageBase64=null; return; }
     const reader = new FileReader();
-    reader.onload = ()=> {
-      preview.innerHTML = `<img src="${reader.result}" alt="preview"/>`;
-      currentImageBase64 = reader.result.split(',')[1];
+    reader.onload = () => {
+      const src = reader.result;
+      currentImageBase64 = src.split(',')[1];
+      preview.innerHTML = `<img src="${src}" />`;
     };
     reader.readAsDataURL(f);
   });
 
-  resetBtn.addEventListener('click', ()=>{
-    preset.value=''; nameManual.value=''; nameMain.value=''; document.getElementById('type').value='Campuran';
-    document.getElementById('tone').value='Inspiratif'; document.getElementById('referral').value='';
-    imageInput.value=''; preview.innerHTML=''; currentImageBase64=null;
-    outputWrap.style.display='none'; commentList.innerHTML=''; captionList.innerHTML=''; hashtagsBox.innerText=''; metaAdvice.innerText='';
+  // Preset sync
+  preset.addEventListener('change', () => {
+    nameManual.value = preset.value;
+    nameMain.value = preset.value;
   });
 
-  // generate action
-  generateBtn.addEventListener('click', async ()=>{
-    const name = nameMain.value.trim() || nameManual.value.trim() || "Konten Kamu";
-    const type = document.getElementById('type').value || "Campuran";
-    const tone = document.getElementById('tone').value || "Inspiratif";
-    const referral = document.getElementById('referral').value.trim();
+  nameManual.addEventListener('input', () => {
+    nameMain.value = nameManual.value;
+  });
 
-    generateBtn.disabled = true; generateBtn.innerText = "Memproses...";
+  // Reset
+  resetBtn.addEventListener('click', () => {
+    preset.value = "";
+    nameMain.value = "";
+    nameManual.value = "";
+    document.getElementById('type').value = "Campuran";
+    document.getElementById('tone').value = "Inspiratif";
+    document.getElementById('referral').value = "";
+    preview.innerHTML = "";
+    imageInput.value = "";
+    resultsDiv.innerHTML = `<div class="placeholder">Klik "Generate Narasi AI" untuk melihat hasil.</div>`;
+  });
+
+  // Generate
+  generateBtn.addEventListener('click', async () => {
+    const payload = {
+      name: nameMain.value.trim(),
+      preset: preset.value,
+      nameManual: nameManual.value.trim(),
+      type: document.getElementById('type').value,
+      tone: document.getElementById('tone').value,
+      referral: document.getElementById('referral').value.trim(),
+      imageBase64: currentImageBase64,
+      ctaStyle: "B"
+    };
+
+    generateBtn.disabled = true;
+    generateBtn.innerText = "Memproses...";
 
     try {
-      const res = await fetch('/api/generate', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ imageBase64: currentImageBase64, name, type, tone, referral })
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
       });
-      if (!res.ok) { const t = await res.text(); throw new Error(t || 'Server error'); }
+
       const data = await res.json();
-
-      // render comments (referral appended only to variant 2 on frontend)
-      commentList.innerHTML = "";
-      (data.commentVariants || []).forEach((cmt,i)=>{
-        const vw = document.createElement('div');
-        vw.className = 'variant';
-        let inner = `<div style="font-size:12px;color:var(--muted)">Variant ${i+1}</div>
-                     <div style="white-space:pre-wrap;margin-top:8px;color:#eef6ff">${escapeHtml(cmt)}</div>
-                     <div style="margin-top:8px"><button class="copy-btn" data-text="${encodeURIComponent(cmt)}">Copy</button></div>`;
-        if (i===1 && data.referralLink) {
-          inner += `<div style="margin-top:8px;font-size:13px;color:var(--muted)">Soft link: <a href="${data.referralLink}" target="_blank" style="color:var(--accent);text-decoration:underline">${data.referralLink}</a></div>`;
-        }
-        vw.innerHTML = inner;
-        commentList.appendChild(vw);
-      });
-
-      // captions
-      captionList.innerHTML = "";
-      (data.captionVariants || []).forEach((cap,i)=>{
-        const vw = document.createElement('div');
-        vw.className = 'variant';
-        vw.innerHTML = `<div style="font-size:12px;color:var(--muted)">Variant ${i+1}</div>
-                        <div style="white-space:pre-wrap;margin-top:8px;color:#eef6ff">${escapeHtml(cap)}</div>
-                        <div style="margin-top:8px"><button class="copy-btn" data-text="${encodeURIComponent(cap)}">Copy Caption</button></div>`;
-        captionList.appendChild(vw);
-      });
-
-      hashtagsBox.innerText = (data.hashtags||[]).join(' ');
-      metaAdvice.innerText = data.metaAdvice || '';
-
-      // attach copy handlers
-      document.querySelectorAll('.copy-btn').forEach(btn=>{
-        btn.onclick = ()=> {
-          const txt = decodeURIComponent(btn.getAttribute('data-text'));
-          navigator.clipboard.writeText(txt).then(()=> alert('Teks di-copy ✅'));
-        };
-      });
-
-      // copy all
-      document.getElementById('copyAllComments').onclick = ()=>{
-        const all = (data.commentVariants||[]).join("\n\n");
-        navigator.clipboard.writeText(all).then(()=> alert('Semua komentar dicopy ✅'));
-      };
-      document.getElementById('copyAllCaptions').onclick = ()=>{
-        const all = (data.captionVariants||[]).join("\n\n");
-        navigator.clipboard.writeText(all).then(()=> alert('Semua caption dicopy ✅'));
-      };
-
-      outputWrap.style.display = 'block';
-      window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
+      renderResults(data);
 
     } catch (err) {
+      alert("Gagal generate: " + err.message);
       console.error(err);
-      alert('Gagal generate: ' + (err.message || err));
+
     } finally {
-      generateBtn.disabled = false; generateBtn.innerText = "Generate Narasi AI 🚀";
+      generateBtn.disabled = false;
+      generateBtn.innerText = "Generate Narasi AI 🚀";
     }
   });
 
-  function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
+  // Render Result
+  function renderResults(data) {
+    resultsDiv.innerHTML = "";
+
+    // ANALYSIS BLOCK
+    const ana = document.createElement("div");
+    ana.className = "variant";
+    ana.innerHTML = `
+      <strong style="color:#9aa4b3">Analisis Singkat</strong>
+      <pre>${escape(JSON.stringify(data.analysis, null, 2))}</pre>
+    `;
+    resultsDiv.appendChild(ana);
+
+    // COMMENTS BLOCK
+    const comWrap = document.createElement("div");
+    comWrap.className = "variant";
+    comWrap.innerHTML = `<strong style="color:#9aa4b3">Komentar Meta-Friendly</strong>`;
+
+    data.commentVariants.forEach((txt, i) => {
+      const v = document.createElement("div");
+      v.style.marginTop = "12px";
+      v.innerHTML = `
+        <div style="font-size:12px; color:#9aa4b3">Varian ${i+1}</div>
+        <pre>${escape(txt)}</pre>
+        <button class="copy-btn small" onclick="copyText(\`${escapeJS(txt)}\`)">Copy</button>
+      `;
+      comWrap.appendChild(v);
+    });
+
+    resultsDiv.appendChild(comWrap);
+
+    // CAPTIONS BLOCK
+    const capWrap = document.createElement("div");
+    capWrap.className = "variant";
+    capWrap.innerHTML = `<strong style="color:#9aa4b3">Caption (HOOK–MASALAH–SOLUSI–CTA–TAG)</strong>`;
+
+    data.captionVariants.forEach((txt, i) => {
+      const v = document.createElement("div");
+      v.style.marginTop = "12px";
+      v.innerHTML = `
+        <div style="font-size:12px; color:#9aa4b3">Varian ${i+1}</div>
+        <pre>${escape(txt)}</pre>
+        <button class="copy-btn small" onclick="copyText(\`${escapeJS(txt)}\`)">Copy</button>
+      `;
+      capWrap.appendChild(v);
+    });
+
+    resultsDiv.appendChild(capWrap);
+  }
+
+  function escape(str) {
+    return String(str)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;");
+  }
+
+  function escapeJS(str) {
+    return String(str).replace(/`/g,"\\`");
+  }
+
+  function copyText(t) {
+    navigator.clipboard.writeText(t).then(() => {
+      alert("Teks disalin!");
+    });
+  }
+
+  // Copy all
+  copyAllCommentsBtn.onclick = () => {
+    navigator.clipboard.writeText(
+      document.querySelectorAll(".variant pre")[1].innerText
+    ).then(() => alert("Semua komentar disalin!"));
+  };
+
+  copyAllCaptionsBtn.onclick = () => {
+    navigator.clipboard.writeText(
+      document.querySelectorAll(".variant pre")[2].innerText
+    ).then(() => alert("Semua caption disalin!"));
+  };
+
+  downloadJSONBtn.onclick = () => {
+    const text = document.querySelector(".variant pre").innerText;
+    const blob = new Blob([text],{type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "npa-ai-output.json";
+    a.click();
+  };
+
 </script>
+
 </body>
-  </html>
+</html>
