@@ -1,140 +1,210 @@
-// api/generate.js
-// Viral Booster final — CTA style: B (Netral & Halus). No external API required (fallback pseudo-vision).
+// ================================
+//  NPA AI Reviewer - NO API KEY VERSION
+//  Fallback Ultra Pro Generator
+//  Tidak memanggil API luar
+//  Menggunakan prompt builder internal
+// ================================
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
-
   try {
-    const { imageBase64, name, type, tone, referral } = req.body || {};
-    const title = (name || "Konten Kamu").trim();
-    const contentType = (type || "campuran").toLowerCase();
-    const toneChoice = (tone || "Inspiratif").trim();
-    const referralLink = (referral || "").trim();
+    const {
+      name,
+      preset,
+      nameManual,
+      type,
+      tone,
+      referral,
+      imageBase64,
+      ctaStyle
+    } = req.body || {};
 
-    // ----------------
-    // PSEUDO-VISION & LABELS
-    // ----------------
+    // -----------------------------
+    // 1. Title / Nama
+    // -----------------------------
+    const title = (nameManual || name || preset || "Konten Kamu").trim();
+
+    // -----------------------------
+    // 2. Pseudo Analisis Gambar (Tanpa API)
+    // -----------------------------
     const labels = [];
-    const low = title.toLowerCase();
-    if (imageBase64) labels.push("image_uploaded");
-    if (low.match(/ngopi|kopi|coffee|warung|cafe|kuliner|makanan/)) labels.push("kuliner");
-    if (low.match(/nasi|mie|bakso|kue/)) labels.push("kuliner");
-    if (low.match(/bangkit|berproses|motivasi|semangat|perjalanan/)) labels.push("motivasi");
-    if (low.match(/testimoni|review|hasil|jualan|produk|usaha/)) labels.push("produk");
-    if (contentType.includes("umkm")) labels.push("umkm");
-    if (contentType.includes("motiv")) labels.push("motivasi");
-    if (contentType.includes("personal")) labels.push("personal");
-    if (!labels.length) labels.push("general");
 
-    const theme = labels.includes("motivasi") ? "motivation" :
-                  labels.includes("umkm") ? "umkm" :
-                  labels.includes("personal") ? "personal" : "mixed";
+    if (imageBase64) labels.push("gambar_diunggah");
 
-    // ----------------
-    // Tone mapping
-    // ----------------
-    const toneMap = {
-      "Inspiratif": "hangat, menguatkan, dan puitis",
-      "Santai": "ringan, akrab, seperti ngobrol",
-      "Profesional": "rapi, fokus pada manfaat",
-      "Friendly": "ramah dan dekat"
+    const lower = title.toLowerCase();
+    if (lower.includes("kopi") || lower.includes("ngopi")) labels.push("kuliner");
+    if (lower.includes("umkm") || lower.includes("produk")) labels.push("umkm");
+    if (lower.includes("motiv") || lower.includes("semangat")) labels.push("motivasi");
+    if (!labels.length) labels.push("umum");
+
+    const theme = labels.includes("motivasi")
+      ? "motivation"
+      : labels.includes("umkm")
+      ? "umkm"
+      : "general";
+
+    // -----------------------------
+    // 3. 10 PRESET TEMA (Tanpa API)
+    // -----------------------------
+    const presetThemes = {
+      "Story-Selling UMKM": {
+        hook: "Perjalanan kecil ini ternyata menyimpan pesan besar.",
+        style: "hangat, jujur, proses, humanis"
+      },
+      "Motivasi Harian": {
+        hook: "Stop scroll dulu sebentar...",
+        style: "memotivasi, ringan, menguatkan"
+      },
+      "Bisnis & Income": {
+        hook: "Kadang peluang itu datang diam-diam...",
+        style: "visioner, penuh harapan"
+      },
+      "Islami / Spiritual": {
+        hook: "Ada hikmah yang sering luput kita lihat…",
+        style: "tenang, lembut, penuh makna"
+      },
+      "Parenting / Keluarga": {
+        hook: "Di balik momen kecil ini, ada pelajaran besar.",
+        style: "hangat, emosional"
+      },
+      "Edukasi / Tips": {
+        hook: "Tahukah kamu…",
+        style: "informasi, ringan, bernilai"
+      },
+      "Perjalanan Hidup": {
+        hook: "Kadang hidup memberi tanda, bukan jawaban.",
+        style: "dalam, reflektif"
+      },
+      "Konten Harian": {
+        hook: "Sedikit cerita hari ini…",
+        style: "ringan, dekat, personal"
+      },
+      "Soft Selling": {
+        hook: "Sebelum kita bahas lebih jauh…",
+        style: "halus, elegan"
+      },
+      "Personal Branding": {
+        hook: "Setiap langkah kecil membentuk karakter besar.",
+        style: "kuat, percaya diri"
+      }
     };
-    const toneDesc = toneMap[toneChoice] || toneMap["Friendly"];
 
-    // ----------------
-    // Helpers: story-selling builders
-    // ----------------
-    function hook(theme, t){
-      if (theme === "motivation") return `${t} — sebentar, ini pesan yang mungkin mengubah harimu.`;
-      if (theme === "umkm") return `${t} — kisah kecil, rasa yang besar.`;
-      if (theme === "personal") return `${t} — cerita jujur dari perjalanan nyata.`;
-      return `${t} — ini layak kamu baca.`;
-    }
-    function problem(theme){
-      if (theme === "motivation") return "Kita sering merasa stuck, bingung harus mulai dari mana.";
-      if (theme === "umkm") return "Banyak produk hebat yang belum ditemukan karena exposure terbatas.";
-      if (theme === "personal") return "Proses sering tak terlihat padahal itulah yang paling berharga.";
-      return "Kadang langkah kecil terasa berat, padahal itu awal dari perubahan.";
-    }
-    function solution(theme){
-      if (theme === "motivation") return "Mulai dari langkah paling kecil—konsistensi yang membentuk hasil.";
-      if (theme === "umkm") return "Fokus pada kualitas + cerita; orang membeli karena terhubung dengan cerita.";
-      if (theme === "personal") return "Bagikan proses, bukan hanya hasil; itu membuat orang terhubung.";
-      return "Ambil satu langkah hari ini, sekecil apa pun.";
-    }
-    function cta_netral(hasRef){
-      // CTA style B: Netral & Halus
-      if (hasRef) return "Info lengkap dan dukungan aku taruh di komentar — silakan cek di sana.";
-      return "Kalau kamu relate, tulis pengalamanmu di komentar — aku baca semuanya.";
+    const presetSelected = presetThemes[preset] || presetThemes["Soft Selling"];
+
+    // -----------------------------
+    // 4. CTA Style (A/B/C)
+    // -----------------------------
+    function buildCTA(hasLink) {
+      if (ctaStyle === "A") {
+        return hasLink
+          ? "Detail lengkapnya sudah aku taruh pelan-pelan di komentar ya 👇"
+          : "Kalau kamu relate, ceritakan di komentar — aku baca kok.";
+      }
+      if (ctaStyle === "C") {
+        return hasLink
+          ? "Kalau penasaran, cek komentar ya — linknya aku letakkan di sana 👇"
+          : "Share pendapatmu di komentar, yuk!";
+      }
+      // Default B (Netral)
+      return hasLink
+        ? "Info lengkapnya aku taruh di komentar bawah — silakan cek ya."
+        : "Kalau relate, tinggal tulis pendapatmu di komentar.";
     }
 
-    // ----------------
-    // Build caption variants (3) — HOOK -> PROBLEM -> SOLUTION -> CTA -> TAG
-    // ----------------
-    const tagsBase = ["#BangkitBersama","#KontenLebihUtama","#RuangNpaSmartSystem","#SmartCreator2025"];
-    const captionVariants = [];
-    for (let i=0;i<3;i++){
-      const opener = i===1 ? "Jangan lewatkan..." : i===2 ? "Baca ini dulu." : "";
-      const cap = `${opener ? opener + "\n\n" : ""}${hook(theme, title)}
+    // -----------------------------
+    // 5. KOMENTAR META-FRIENDLY (10 varian)
+    // -----------------------------
+    const commentPool = [
+      "Kerasa banget value yang kamu bagi di sini ✨ Detailnya aku taruh di komentar ya 👇",
+      "Postingan begini tuh hangat banget. Lanjutannya ada di komentar bawah.",
+      "Energinya kerasa! Insight lanjut aku taruh di komentar ya 👇",
+      "Keren… vibes-nya ngena. Tambahan catatannya ada di komentar.",
+      "Ini tipe konten yang bikin banyak orang relate ✨ Cek komentar ya.",
+      "Ada rasa tenang dari postingan ini. Lanjutan insight ada di komentar.",
+      "Prosesnya kerasa nyata. Catatan kecilnya aku taruh di komentar bawah.",
+      "Suka banget sama penyampaiannya. Detail ada di komentar ya 👇",
+      "Bikin tambah semangat! Info tambahannya ada di komentar.",
+      "Pesannya kuat banget… lanjutannya aku simpan di komentar."
+    ];
 
-${problem(theme)}
+    // Ambil 4 varian random
+    const shuffled = [...commentPool].sort(() => Math.random() - 0.5);
+    const commentVariants = shuffled.slice(0, 4);
 
-${solution(theme)}
+    // -----------------------------
+    // 6. BANGUN CAPTION (3 VARIAN)
+    // -----------------------------
+    function buildCaption(variantIndex) {
+      const hook = presetSelected.hook || "Ada cerita menarik di sini...";
+      const problem =
+        theme === "motivation"
+          ? "Kadang kita merasa langkah hidup ini terasa berat—kayak nggak tahu harus mulai dari mana."
+          : theme === "umkm"
+          ? "Banyak usaha bagus sebenarnya tinggal selangkah lagi untuk dikenal luas."
+          : "Sering kali kita lupa, proses kecil itu punya arti yang besar.";
 
-${cta_netral(!!referralLink)}
+      const solution =
+        theme === "motivation"
+          ? "Mulailah dari langkah paling kecil—yang penting bergerak."
+          : theme === "umkm"
+          ? "Ceritakan prosesnya, tunjukkan nilainya—orang connect karena cerita."
+          : "Ambil napas, jalan pelan, dan tetap lanjut. Hidup mengikuti ritmemu.";
 
-${tagsBase.join(' ')}${i===2 ? " #UMKMBerproses" : ""}`;
-      captionVariants.push(cap);
+      const cta = buildCTA(!!referral);
+      const tags = "#KontenLebihUtama #SmartCreator2025 #BangkitBersama";
+
+      return `${variantIndex === 1 ? "Jangan lewatkan ini." : variantIndex === 2 ? "Baca ini dulu." : ""}
+
+${hook}
+
+${problem}
+
+${solution}
+
+${cta}
+
+${tags}`;
     }
 
-    // ----------------
-    // Build comment variants (3 strong meta-friendly + 1 extra)
-    // referral only for variant index 1 (frontend will append link in UI)
-    // ----------------
-    const commentVariants = [];
+    const captionVariants = [
+      buildCaption(0),
+      buildCaption(1),
+      buildCaption(2)
+    ];
 
-    commentVariants.push(
-`${title} — energinya kerasa banget 🔥
-Prosesnya terlihat nyata, bukan sekadar gaya.`
-    );
+    // -----------------------------
+    // 7. HASHTAGS + META ADVICE
+    // -----------------------------
+    const hashtags = [
+      "#KontenLebihUtama",
+      "#SmartCreator2025",
+      "#BangkitBersama",
+      "#DukungLokal",
+      "#UMKMBerproses"
+    ];
 
-    commentVariants.push(
-`${title} — baca ini beneran menguatkan ✨
-Jika ingin dukung atau lihat detail, cek komentar — aku taruh link di sana.`
-    );
+    const metaAdvice =
+      "Gunakan pola HOOK → MASALAH → SOLUSI → CTA → TAG. Link sebaiknya di komentar (soft). Hindari hard-sell agar algoritma Meta tetap ramah.";
 
-    commentVariants.push(
-`Suka sama vibe ini 💛
-Kalau kamu, langkah kecil apa yang hari ini kamu ambil?`
-    );
-
-    // optional 4th variant (credibility)
-    commentVariants.push(
-`Keren banget—jenis konten yang ngasih semangat.
-Terus bagikan prosesnya supaya lebih banyak yang terhubung.`
-    );
-
-    // ----------------
-    // Hashtags & metaAdvice
-    // ----------------
-    const hashtags = ["#KontenLebihUtama","#SmartCreator2025","#UMKMBerproses","#BangkitBersama","#DukungLokal"].slice(0,6);
-    const metaAdvice = "Gunakan pola HOOK→MASALAH→SOLUSI→CTA. Letakkan link di komentar (soft). Hindari hard-sell agar reach tetap baik.";
-
-    // ----------------
-    // Return
-    // ----------------
+    // -----------------------------
+    // 8. RETURN RESPONSE
+    // -----------------------------
     return res.status(200).json({
       ok: true,
-      analysis: { labels, theme, tone: toneChoice, toneDesc },
+      analysis: {
+        labels,
+        theme,
+        preset,
+        tone,
+        type
+      },
       captionVariants,
       commentVariants,
       hashtags,
-      referralLink: referralLink, // frontend will show soft link only in comment variant 2
+      referralLink: referral || "",
       metaAdvice
     });
-
   } catch (err) {
-    console.error('ERR generate:', err);
-    return res.status(500).json({ error: "Internal Server Error", details: err.message });
+    console.error("ERR:", err);
+    return res.status(500).json({ error: "Internal Error", detail: err.message });
   }
-}
+  }
